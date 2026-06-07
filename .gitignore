@@ -1,0 +1,9 @@
+.build/
+build/
+.vscode/
+.claude/
+*.biprivatekey
+*.log
+*.pbo
+*.pbo.bak
+*.bat

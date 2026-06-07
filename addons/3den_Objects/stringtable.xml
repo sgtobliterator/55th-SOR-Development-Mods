@@ -1,0 +1,626 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project Name="Eden Objects">
+  <Container Name="DisplayName">
+    <Container Name="Objects_F">
+      <Key ID="STR_Bandage_Roll_F">
+        <Original>Bandages (Roll)</Original>
+        <English>Bandages (Roll)</English>
+        <Russian>Бинты (Рулон)</Russian>
+        <German>Bandage (aufgerollt)</German>
+        <Portuguese>Bandagens (rolo)</Portuguese>
+        <Italian>Bende (rotolo)</Italian>
+        <Polish>Bandaż (rolka)</Polish>
+        <French>Bandages (roleau)</French>
+        <Spanish>Vendajes (Rollo)</Spanish>
+        <Czech>Obvazy (role)</Czech>
+      </Key>
+      <Key ID="STR_Banner_AAF_F">
+        <Original>Banner (AAF)</Original>
+        <English>Banner (AAF)</English>
+        <Russian>Флаг (AAF)</Russian>
+        <German>Banner (AAF)</German>
+        <Portuguese>Bandeira (AAF)</Portuguese>
+        <Italian>Bandiera (AAF)</Italian>
+        <Polish>Sztandar (AAF)</Polish>
+        <French>Bannière (AAF)</French>
+        <Spanish>Bandera (AAF)</Spanish>
+        <Czech>Prapor (AAF)</Czech>
+      </Key>
+      <Key ID="STR_Banner_CSAT_F">
+        <Original>Banner (CSAT)</Original>
+        <English>Banner (CSAT)</English>
+        <Russian>Флаг (CSAT)</Russian>
+        <German>Banner (CSAT)</German>
+        <Portuguese>Bandeira (CSAT)</Portuguese>
+        <Italian>Bandiera (CSAT)</Italian>
+        <Polish>Sztandar (CSAT)</Polish>
+        <French>Bannière (CSAT)</French>
+        <Spanish>Bandera (CSAT)</Spanish>
+        <Czech>Prapor (CSAT)</Czech>
+      </Key>
+      <Key ID="STR_Banner_FIA_F">
+        <Original>Banner (FIA)</Original>
+        <English>Banner (FIA)</English>
+        <Russian>Флаг (FIA)</Russian>
+        <German>Banner (FIA)</German>
+        <Portuguese>Bandeira (FIA)</Portuguese>
+        <Italian>Bandiera (FIA)</Italian>
+        <Polish>Sztandar (FIA)</Polish>
+        <French>Bannière (FIA)</French>
+        <Spanish>Bandera (FIA)</Spanish>
+        <Czech>Prapor (FIA)</Czech>
+      </Key>
+      <Key ID="STR_Banner_TFA_F">
+        <Original>Banner (NATO)</Original>
+        <English>Banner (NATO)</English>
+        <Russian>Флаг (HATO)</Russian>
+        <German>Banner (NATO)</German>
+        <Portuguese>Bandeira (OTAN)</Portuguese>
+        <Italian>Bandiera (NATO)</Italian>
+        <Polish>Sztandar (NATO)</Polish>
+        <French>Bannière (OTAN)</French>
+        <Spanish>Bandera (OTAN)</Spanish>
+        <Czech>Prapor (NATO)</Czech>
+      </Key>
+      <Key ID="STR_Bed_Old_F">
+        <Original>Bed (Old)</Original>
+        <English>Bed (Old)</English>
+        <Russian>Постель (потрепанная)</Russian>
+        <German>Bett (abgenutzt)</German>
+        <Portuguese>Cama (gasta)</Portuguese>
+        <Italian>Letto (squallido)</Italian>
+        <Polish>Łóżko (brudne)</Polish>
+        <French>Lit (vieux)</French>
+        <Spanish>Cama (vieja)</Spanish>
+        <Czech>Postel (stará)</Czech>
+      </Key>
+      <Key ID="STR_Blue_Shield_F">
+        <Original>Blue Shield</Original>
+        <English>Blue Shield</English>
+        <Russian>Синий Щит</Russian>
+        <German>Blauen Schild</German>
+        <Portuguese>Escudo Azul</Portuguese>
+        <Italian>Scudo Blu</Italian>
+        <Polish>Niebieska Tarcza</Polish>
+        <French>Bouclier Bleu</French>
+        <Spanish>Escudo Azul</Spanish>
+        <Czech>Modrý Štít</Czech>
+      </Key>
+      <Key ID="STR_Blue_Shield_English_F">
+        <Original>Blue Shield (English)</Original>
+        <English>Blue Shield (English)</English>
+        <Russian>Синий Щит (Aнглийский)</Russian>
+        <German>Blauen Schild (Englisch)</German>
+        <Portuguese>Escudo Azul (Inglês)</Portuguese>
+        <Italian>Scudo Blu (Inglese)</Italian>
+        <Polish>Niebieska Tarcza (Angielski)</Polish>
+        <French>Bouclier Bleu (Anglais)</French>
+        <Spanish>Escudo Azul (Inglés)</Spanish>
+        <Czech>Modrý Štít (Angličtina)</Czech>
+      </Key>
+      <Key ID="STR_Blue_Shield_French_F">
+        <Original>Blue Shield (French)</Original>
+        <English>Blue Shield (French)</English>
+        <Russian>Синий Щит (Французский)</Russian>
+        <German>Blauen Schild (Französisch)</German>
+        <Portuguese>Escudo Azul (Francês)</Portuguese>
+        <Italian>Scudo Blu (Francese)</Italian>
+        <Polish>Niebieska Tarcza (Francuski)</Polish>
+        <French>Bouclier Bleu (Français)</French>
+        <Spanish>Escudo Azul (Francés)</Spanish>
+        <Czech>Modrý Štít (Francouzština)</Czech>
+      </Key>
+      <Key ID="STR_Blue_Shield_Greek_F">
+        <Original>Blue Shield (Greek)</Original>
+        <English>Blue Shield (Greek)</English>
+        <Russian>Синий Щит (Греческий)</Russian>
+        <German>Blauen Schild (Griechisch)</German>
+        <Portuguese>Escudo Azul (Grego)</Portuguese>
+        <Italian>Scudo Blu (Greco)</Italian>
+        <Polish>Niebieska Tarcza (Grecki)</Polish>
+        <French>Bouclier Bleu (Grec)</French>
+        <Spanish>Escudo Azul (Griego)</Spanish>
+        <Czech>Modrý Štít (Řecký)</Czech>
+      </Key>
+      <Key ID="STR_Bunk_Beds_F">
+        <Original>Bunk Beds</Original>
+        <English>Bunk Beds</English>
+        <Russian>Двухъярусные Кровати</Russian>
+        <German>Etagenbett</German>
+        <Portuguese>Beliches</Portuguese>
+        <Italian>Letti a Castello</Italian>
+        <Polish>Łóżka Piętrowe</Polish>
+        <French>Lits Superposés</French>
+        <Spanish>Literas</Spanish>
+        <Czech>Patrové Postele</Czech>
+      </Key>
+      <Key ID="STR_Bunk_Beds_CTRG_F">
+        <Original>Bunk Beds (CTRG)</Original>
+        <English>Bunk Beds (CTRG)</English>
+        <Russian>Двухъярусные Кровати (CTRG)</Russian>
+        <German>Etagenbett (CTRG)</German>
+        <Portuguese>Beliches (CTRG)</Portuguese>
+        <Italian>Letti a Castello (CTRG)</Italian>
+        <Polish>Łóżka Piętrowe (CTRG)</Polish>
+        <French>Lits Superposés (CTRG)</French>
+        <Spanish>Literas (CTRG)</Spanish>
+        <Czech>Patrové Postele (CTRG)</Czech>
+      </Key>
+      <Key ID="STR_Bunk_Beds_CSAT_F">
+        <Original>Bunk Beds (CSAT)</Original>
+        <English>Bunk Beds (CSAT)</English>
+        <Russian>Двухъярусные Кровати (CSAT)</Russian>
+        <German>Etagenbett (CSAT)</German>
+        <Portuguese>Beliches (CSAT)</Portuguese>
+        <Italian>Letti a Castello (CSAT)</Italian>
+        <Polish>Łóżka Piętrowe (CSAT)</Polish>
+        <French>Lits Superposés (CSAT)</French>
+        <Spanish>Literas (CSAT)</Spanish>
+        <Czech>Patrové Postele (CSAT)</Czech>
+      </Key>
+      <Key ID="STR_Cabinet_CSAT_F">
+        <Original>Bedside Cabinet (CSAT)</Original>
+        <English>Bedside Cabinet (CSAT)</English>
+        <Russian>Tумбочка (CSAT)</Russian>
+        <German>Nachttisch (CSAT)</German>
+        <Portuguese>Mesa-de-Cabeceira (CSAT)</Portuguese>
+        <Italian>Comodino (CSAT)</Italian>
+        <Polish>Stolik Nocny (CSAT)</Polish>
+        <French>Table de Nuit (CSAT)</French>
+        <Spanish>Mesita de Noche (CSAT)</Spanish>
+        <Czech>Noční Stolek (CSAT)</Czech>
+      </Key>
+      <Key ID="STR_Cabinet_NATO_F">
+        <Original>Bedside Cabinet (NATO)</Original>
+        <English>Bedside Cabinet (NATO)</English>
+        <Russian>Tумбочка (HATO)</Russian>
+        <German>Nachttisch (NATO)</German>
+        <Portuguese>Mesa-de-Cabeceira (OTAN)</Portuguese>
+        <Italian>Comodino (NATO)</Italian>
+        <Polish>Stolik Nocny (NATO)</Polish>
+        <French>Table de Nuit (OTAN)</French>
+        <Spanish>Mesita de Noche (OTAN)</Spanish>
+        <Czech>Noční Stolek (NATO)</Czech>
+      </Key>
+      <Key ID="STR_Chemlight_Box_F">
+        <Original>Chemlights</Original>
+        <English>Chemlights</English>
+        <Russian>ХИС</Russian>
+        <German>Leuchtstäben</German>
+        <Portuguese>Bastão de luzes</Portuguese>
+        <Italian>Luces Quimicas</Italian>
+        <Polish>Świetliki</Polish>
+        <French>Bâtons Lumineux</French>
+        <Spanish>Barras de Luzes</Spanish>
+        <Czech>Chemická Světla</Czech>
+      </Key>
+      <Key ID="STR_Clipboard_F">
+        <Original>Clipboard</Original>
+        <English>Clipboard</English>
+        <Russian>Папка-планшет</Russian>
+        <German>Klemmbrett</German>
+        <Portuguese>Prancheta</Portuguese>
+        <Italian>Appunti</Italian>
+        <Polish>Podkładka do Pisania z Klipsem</Polish>
+        <French>Presse-Papiers</French>
+        <Spanish>Portapapeles</Spanish>
+        <Czech>Schránka</Czech>
+      </Key>
+      <Key ID="STR_Combat_Knife_F">
+        <Original>Combat Knife</Original>
+        <English>Combat Knife</English>
+        <Russian>Боевой Hож</Russian>
+        <German>Kampfmesser</German>
+        <Portuguese>Faca de Combate</Portuguese>
+        <Italian>Coltello da Combattimento</Italian>
+        <Polish>Nóż Bojowy</Polish>
+        <French>Couteau de Combat</French>
+        <Spanish>Cuchillo de Combate</Spanish>
+        <Czech>Bojový Nůž</Czech>
+      </Key>
+      <Key ID="STR_Counter_F">
+        <Original>Counter</Original>
+        <English>Counter</English>
+        <Russian>Прилавок</Russian>
+        <German>Tresen</German>
+        <Portuguese>Balcão</Portuguese>
+        <Italian>Bancone</Italian>
+        <Polish>Lada</Polish>
+        <French>Comptoir</French>
+        <Spanish>Mostrador</Spanish>
+        <Czech>Pult</Czech>
+      </Key>
+      <Key ID="STR_Eau_de_Combat_F">
+        <Original>Eau de Combat</Original>
+        <English>Eau de Combat</English>
+        <Russian>Eau de Combat</Russian>
+        <German>Eau de Combat</German>
+        <Portuguese>Eau de Combat</Portuguese>
+        <Italian>Eau de Combat</Italian>
+        <Polish>Eau de Combat</Polish>
+        <French>Eau de Combat</French>
+        <Spanish>Eau de Combat</Spanish>
+        <Czech>Eau de Combat</Czech>
+      </Key>
+      <Key ID="STR_Eau_de_Combat_Box_F">
+        <Original>Eau de Combat (Boxed)</Original>
+        <English>Eau de Combat (Boxed)</English>
+        <Russian>Eau de Combat (Упаковка)</Russian>
+        <German>Eau de Combat (Verpackung)</German>
+        <Portuguese>Eau de Combat (Embalagem)</Portuguese>
+        <Italian>Eau de Combat (Imballaggio)</Italian>
+        <Polish>Eau de Combat (Opakowanie)</Polish>
+        <French>Eau de Combat (Emballage)</French>
+        <Spanish>Eau de Combat (Embalaje)</Spanish>
+        <Czech>Eau de Combat (Obal)</Czech>
+      </Key>
+      <Key ID="STR_Exhibition_Stand_F">
+        <Original>Exhibition Stand</Original>
+        <English>Exhibition Stand</English>
+        <Russian>Выставочный стенд</Russian>
+        <German>Messestand</German>
+        <Portuguese>Stand de Exposição</Portuguese>
+        <Italian>Stand Espositivo</Italian>
+        <Polish>Stanowisko Ekspozycyjne</Polish>
+        <French>Stand d'Exposition</French>
+        <Spanish>Puesto de Exhibición</Spanish>
+        <Czech>Výstavní Stánky</Czech>
+      </Key>
+      <Key ID="STR_Flashdrive_F">
+        <Original>Flashdrive</Original>
+        <English>Flashdrive</English>
+        <Russian>Флеш-накопитель</Russian>
+        <German>Flashdrive</German>
+        <Portuguese>Pendrive</Portuguese>
+        <Italian>Flashdrive</Italian>
+        <Polish>Pendrive</Polish>
+        <French>Lecteur Flash</French>
+        <Spanish>Memoria Flash</Spanish>
+        <Czech>Flashdisk</Czech>
+      </Key>
+      <Key ID="STR_GCS_F">
+        <Original>Ground Control Station (NATO)</Original>
+        <English>Ground Control Station (NATO)</English>
+        <Russian>Наземная Станция Управления (НАТО)</Russian>
+        <German>Bodenkontrollstation (NATO)</German>
+        <Portuguese>Estação Móvel de Controle em Solo (OTAN)</Portuguese>
+        <Italian>Stazione di Controllo Remoto a Terra (NATO)</Italian>
+        <Polish>Stacja Kontroli Naziemnej (NATO)</Polish>
+        <French>Station de Contrôle au Sol (OTAN)</French>
+        <Spanish>Estación de Control Terrestre (OTAN)</Spanish>
+        <Czech>Pozemní Řídící Stanice (NATO)</Czech>
+      </Key>
+      <Key ID="STR_GCS_Packed_F">
+        <Original>Ground Control Station (NATO) (Packed)</Original>
+        <English>Ground Control Station (NATO) (Packed)</English>
+        <Russian>Наземная Станция Управления (НАТО) (Упакованная)</Russian>
+        <German>Bodenkontrollstation (NATO) (Kasten)</German>
+        <Portuguese>Estação Móvel de Controle em Solo (OTAN) (Estojo)</Portuguese>
+        <Italian>Stazione di Controllo Remoto a Terra (NATO) (Scatola)</Italian>
+        <Polish>Stacja Kontroli Naziemnej (NATO) (Spakowana)</Polish>
+        <French>Station de Contrôle au Sol (OTAN) (Caisse)</French>
+        <Spanish>Estación de Control Terrestre (OTAN) (Caja)</Spanish>
+        <Czech>Pozemní Řídící Stanice (NATO) (Bedna)</Czech>
+      </Key>
+      <Key ID="STR_GCS_Hub_F">
+        <Original>Ground Control Station (NATO) (Hub)</Original>
+        <English>Ground Control Station (NATO) (Hub)</English>
+        <Russian>Наземная Станция Управления (НАТО) (Центр управления)</Russian>
+        <German>Bodenkontrollstation (NATO) (Hub)</German>
+        <Portuguese>Estação Móvel de Controle em Solo (OTAN) (Hub)</Portuguese>
+        <Italian>Stazione di Controllo Remoto a Terra (NATO) (Hub)</Italian>
+        <Polish>Stacja Kontroli Naziemnej (NATO) (Koncentrator)</Polish>
+        <French>Station de Contrôle au Sol (OTAN) (Hub)</French>
+        <Spanish>Estación de Control Terrestre (OTAN) (Hub)</Spanish>
+        <Czech>Pozemní Řídící Stanice (NATO) (Hub)</Czech>
+      </Key>
+      <Key ID="STR_GCS_CTRG_F">
+        <Original>Ground Control Station (CTRG)</Original>
+        <English>Ground Control Station (CTRG)</English>
+        <Russian>Наземная Станция Управления (CTRG)</Russian>
+        <German>Bodenkontrollstation (CTRG)</German>
+        <Portuguese>Estação Móvel de Controle em Solo (CTRG)</Portuguese>
+        <Italian>Stazione di Controllo Remoto a Terra (CTRG)</Italian>
+        <Polish>Stacja Kontroli Naziemnej (CTRG)</Polish>
+        <French>Station de Contrôle au Sol (CTRG)</French>
+        <Spanish>Estación de Control Terrestre (CTRG)</Spanish>
+        <Czech>Pozemní Řídící Stanice (CTRG)</Czech>
+      </Key>
+      <Key ID="STR_GCS_CTRG_Packed_F">
+        <Original>Ground Control Station (CTRG) (Packed)</Original>
+        <English>Ground Control Station (CTRG) (Packed)</English>
+        <Russian>Наземная Станция Управления (CTRG) (Упакованная)</Russian>
+        <German>Bodenkontrollstation (CTRG) (Kasten)</German>
+        <Portuguese>Estação Móvel de Controle em Solo (CTRG) (Estojo)</Portuguese>
+        <Italian>Stazione di Controllo Remoto a Terra (CTRG) (Scatola)</Italian>
+        <Polish>Stacja Kontroli Naziemnej (CTRG) (Spakowana)</Polish>
+        <French>Station de Contrôle au Sol (CTRG) (Caisse)</French>
+        <Spanish>Estación de Control Terrestre (CTRG) (Caja)</Spanish>
+        <Czech>Pozemní Řídící Stanice (CTRG) (Bedna)</Czech>
+      </Key>
+      <Key ID="STR_GCS_CTRG_Hub_F">
+        <Original>Ground Control Station (CTRG) (Hub)</Original>
+        <English>Ground Control Station (CTRG) (Hub)</English>
+        <Russian>Наземная Станция Управления (CTRG) (Центр управления)</Russian>
+        <German>Bodenkontrollstation (CTRG) (Hub)</German>
+        <Portuguese>Estação Móvel de Controle em Solo (CTRG) (Hub)</Portuguese>
+        <Italian>Stazione di Controllo Remoto a Terra (CTRG) (Hub)</Italian>
+        <Polish>Stacja ontroli Naziemnej (CTRG) (Kocentrator)</Polish>
+        <French>Station de Contrôle au Sol (CTRG) (Hub)</French>
+        <Spanish>Estación de Control Terrestre (CTRG) (Hub)</Spanish>
+        <Czech>Pozemní Řídící Stanice (CTRG) (Hub)</Czech>
+      </Key>
+      <Key ID="STR_IDAP_Mug_F">
+        <Original>Mug</Original>
+        <English>Mug</English>
+        <Russian>Kружка</Russian>
+        <German>Becher</German>
+        <Portuguese>Caneca</Portuguese>
+        <Italian>Tazza</Italian>
+        <Polish>Kubek</Polish>
+        <French>Tasse</French>
+        <Spanish>Jarro</Spanish>
+        <Czech>Hrnek</Czech>
+      </Key>
+      <Key ID="STR_IDAP_Road_Sign_F">
+        <Original>Sign (IDAP)</Original>
+        <English>Sign (IDAP)</English>
+        <Russian>Знак (IDAP)</Russian>
+        <German>Schild (IDAP)</German>
+        <Portuguese>Placa (IDAP)</Portuguese>
+        <Italian>Segnale (IDAP)</Italian>
+        <Polish>Znak (IDAP)</Polish>
+        <French>Panneau (IDAP)</French>
+        <Spanish>Señall (IDAP)</Spanish>
+        <Czech>Značka (IDAP)</Czech>
+      </Key>
+      <Key ID="STR_IDAP_Sign_Small_F">
+        <Original>Road Sign (IDAP)</Original>
+        <English>Road Sign (IDAP)</English>
+        <Russian>Дорожный Знак (IDAP)</Russian>
+        <German>Verkehrsschild (IDAP)</German>
+        <Portuguese>Placa de Sinalização (IDAP)</Portuguese>
+        <Italian>Segnale Stradale (IDAP)</Italian>
+        <Polish>Znak Drogowy (IDAP)</Polish>
+        <French>Panneau de Signalisation (IDAP)</French>
+        <Spanish>Señal de Tráfico (IDAP)</Spanish>
+        <Czech>Dopravní Značka (IDAP)</Czech>
+      </Key>
+      <Key ID="STR_KA60_Wreck_F">
+        <Original>KA60 Wreck</Original>
+        <English>KA60 Wreck</English>
+        <Russian>Обломки KA-60</Russian>
+        <German>KA60-Wrack</German>
+        <Portuguese>KA60 Quebrado</Portuguese>
+        <Italian>Rottame di KA60</Italian>
+        <Polish>Wrak KA60</Polish>
+        <French>Épave de KA60</French>
+        <Spanish>Restos de KA60</Spanish>
+        <Czech>Vrak Ka60</Czech>
+      </Key>
+      <Key ID="STR_KA60_Wreck_Door_F">
+        <Original>KA60 Wreck (Door)</Original>
+        <English>KA60 Wreck (Door)</English>
+        <Russian>Обломки Ка-60 (Дверь)</Russian>
+        <German>KA60-Wrack (Tür)</German>
+        <Portuguese>KA60 Quebrado (Porta)</Portuguese>
+        <Italian>Rottame di KA60 (Porta)</Italian>
+        <Polish>Wrak KA60 (Drzwi)</Polish>
+        <French>Épave de KA60 (Porte)</French>
+        <Spanish>Restos de KA60 (Puerta)</Spanish>
+        <Czech>Vrak Ka60 (Dveře)</Czech>
+      </Key>
+      <Key ID="STR_KA60_Wreck_Rotor_F">
+        <Original>KA60 Wreck (Rotor Blade)</Original>
+        <English>KA60 Wreck (Rotor Blade)</English>
+        <Russian>Обломки Ка-60 (Лопасть несущего винта)</Russian>
+        <German>KA60-Wrack (Rotorblatt)</German>
+        <Portuguese>KA60 Quebrado (Pás do Rotor)</Portuguese>
+        <Italian>Rottame di KA60 (Pala del Rotore)</Italian>
+        <Polish>Wrak KA60 (Łopata Wirnika)</Polish>
+        <French>Épave de KA60 (Pale de Rotor)</French>
+        <Spanish>Restos de KA60 (Cuchilla del Rotor)</Spanish>
+        <Czech>Vrak Ka60 (Rotoru)</Czech>
+      </Key>
+      <Key ID="STR_KA60_Wreck_Tail_F">
+        <Original>KA60 Wreck (Tail)</Original>
+        <English>KA60 Wreck (Tail)</English>
+        <Russian>Обломки Ка-60 (Xвостовая часть)</Russian>
+        <German>KA60-Wrack (Leitwerk)</German>
+        <Portuguese>KA60 Quebrado (Estabilizador)</Portuguese>
+        <Italian>Rottame di KA60 (Piano di Coda)</Italian>
+        <Polish>Wrak KA60 (Ogon)</Polish>
+        <French>Épave de KA60 (Empennage Arrière)</French>
+        <Spanish>Restos de KA60 (Cola)</Spanish>
+        <Czech>Vrak Ka60 (Vodorovné Ocasní Plochy)</Czech>
+      </Key>
+      <Key ID="STR_Mattress_Old_F">
+        <Original>Mattress (Old)</Original>
+        <English>Mattress (Old)</English>
+        <Russian>Mатрас (потрепанный)</Russian>
+        <German>Matratze (abgenutzt)</German>
+        <Portuguese>Colchão (gasto)</Portuguese>
+        <Italian>Materasso (squallido)</Italian>
+        <Polish>Materac (brudny)</Polish>
+        <French>Matelas (vieux)</French>
+        <Spanish>Colchón (viejo)</Spanish>
+        <Czech>Matrace (stará)</Czech>
+      </Key>
+      <Key ID="STR_Metal_Locker_F">
+        <Original>Metal Locker</Original>
+        <English>Metal Locker</English>
+        <Russian>Металлический Шкафчик</Russian>
+        <German>Spind</German>
+        <Portuguese>Cacifo</Portuguese>
+        <Italian>Armadietto</Italian>
+        <Polish>Szafka</Polish>
+        <French>Casier</French>
+        <Spanish>Taquilla</Spanish>
+        <Czech>Skříňka na Zámek</Czech>
+      </Key>
+      <Key ID="STR_Metal_Locker_Close">
+        <Original>Close</Original>
+        <English>Close</English>
+        <Russian>Закрыть</Russian>
+        <German>Schließen</German>
+        <Portuguese>Fechar</Portuguese>
+        <Italian>Chiudi</Italian>
+        <Polish>Zamknij</Polish>
+        <French>Fermer</French>
+        <Spanish>Cerrar</Spanish>
+        <Czech>Zavřít</Czech>
+      </Key>
+      <Key ID="STR_Metal_Locker_Open">
+        <Original>Open</Original>
+        <English>Open</English>
+        <Russian>Oткрыть</Russian>
+        <German>Geöffnet</German>
+        <Portuguese>Aberto</Portuguese>
+        <Italian>Apri</Italian>
+        <Polish>Otwórz</Polish>
+        <French>Ouvert</French>
+        <Spanish>Abrir</Spanish>
+        <Czech>Otevřeno</Czech>
+      </Key>
+      <Key ID="STR_Microphone_F">
+        <Original>Microphone (AAN)</Original>
+        <English>Microphone (AAN)</English>
+        <Russian>Микрофон (AAN)</Russian>
+        <German>Mikrofon (AAN)</German>
+        <Portuguese>Microfone (AAN)</Portuguese>
+        <Italian>Microfono (AAN)</Italian>
+        <Polish>Mikrofon (AAN)</Polish>
+        <French>Microphone (AAN)</French>
+        <Spanish>Micrófono (AAN)</Spanish>
+        <Czech>Mikrofon (AAN)</Czech>
+      </Key>
+      <Key ID="STR_Narcotics_F">
+        <Original>Narcotics</Original>
+        <English>Narcotics</English>
+        <Russian>Hаркотические</Russian>
+        <German>Narkotika</German>
+        <Portuguese>Narcóticos</Portuguese>
+        <Italian>Narcotici</Italian>
+        <Polish>Narkotyki</Polish>
+        <French>Narcotiques</French>
+        <Spanish>Narcóticos</Spanish>
+        <Czech>Narkotika</Czech>
+      </Key>
+      <Key ID="STR_Narcotics_Three_F">
+        <Original>Narcotics (x3)</Original>
+        <English>Narcotics (x3)</English>
+        <Russian>Hаркотические (x3)</Russian>
+        <German>Narkotika (x3)</German>
+        <Portuguese>Narcóticos (x3)</Portuguese>
+        <Italian>Narcotici (x3)</Italian>
+        <Polish>Narkotyki (x3)</Polish>
+        <French>Narcotiques (x3)</French>
+        <Spanish>Narcóticos (x3)</Spanish>
+        <Czech>Narkotika (x3)</Czech>
+      </Key>
+      <Key ID="STR_Newspaper_F">
+        <Original>Newspaper</Original>
+        <English>Newspaper</English>
+        <Russian>Газета</Russian>
+        <German>Zeitung</German>
+        <Portuguese>Jornal</Portuguese>
+        <Italian>Giornale</Italian>
+        <Polish>Gazeta</Polish>
+        <French>Journal</French>
+        <Spanish>Periódico</Spanish>
+        <Czech>Noviny</Czech>
+      </Key>
+      <Key ID="STR_Paperback_F">
+        <Original>Paperback</Original>
+        <English>Paperback</English>
+        <Russian>Книга в Мягкой Обложке</Russian>
+        <German>Paperback</German>
+        <Portuguese>Livro Brochado</Portuguese>
+        <Italian>Paperback</Italian>
+        <Polish>Książka w Broszurowej Oprawie</Polish>
+        <French>Livre Broché</French>
+        <Spanish>Libro en Rústica</Spanish>
+        <Czech>Brožovaný</Czech>
+      </Key>
+      <Key ID="STR_Picture_Frame_F">
+        <Original>Picture Frame (Landscape)</Original>
+        <English>Picture Frame (Landscape)</English>
+        <Russian>Фоторамка (Горизонтальная)</Russian>
+        <German>Bilderrahmen (Waagerecht)</German>
+        <Portuguese>Moldura de Retrato (Horizontal)</Portuguese>
+        <Italian>Cornice (Orizzontale)</Italian>
+        <Polish>Ramka (Horyzontalna)</Polish>
+        <French>Cadre (Horizontal)</French>
+        <Spanish>Cuadro (Horizontal)</Spanish>
+        <Czech>Rám Obrazu (Vodorovný)</Czech>
+      </Key>
+      <Key ID="STR_Picture_Frame_Portrait_F">
+        <Original>Picture Frame (Portrait)</Original>
+        <English>Picture Frame (Portrait)</English>
+        <Russian>Фоторамка (Вертикальная)</Russian>
+        <German>Bilderrahmen (Senkrecht)</German>
+        <Portuguese>Moldura de Retrato (Vertical)</Portuguese>
+        <Italian>Cornice (Verticale)</Italian>
+        <Polish>Ramka (Pionowa)</Polish>
+        <French>Cadre (Vertical)</French>
+        <Spanish>Cuadro (Vertical)</Spanish>
+        <Czech>Rám Obrazu (Vertikální)</Czech>
+      </Key>
+      <Key ID="STR_Sign_Hotel_F">
+        <Original>Sign (Hotel)</Original>
+        <English>Sign (Hotel)</English>
+        <Russian>Указатель (Oтель)</Russian>
+        <German>Schild (Hotel)</German>
+        <Portuguese>Placa (hotel)</Portuguese>
+        <Italian>Cartello (hotel)</Italian>
+        <Polish>Znak (hotel)</Polish>
+        <French>Panneau (hotel)</French>
+        <Spanish>Señal (hotel)</Spanish>
+        <Czech>Značka (hotel)</Czech>
+      </Key>
+      <Key ID="STR_Tactical_Screen_F">
+        <Original>Tactical Screen</Original>
+        <English>Tactical Screen</English>
+        <Russian>Экран</Russian>
+        <German>Taktikbildschirm</German>
+        <Portuguese>Tela Tático</Portuguese>
+        <Italian>Schermo Tattico</Italian>
+        <Polish>Ekran Taktyczny</Polish>
+        <French>Écran Tactique</French>
+        <Spanish>Pantalla Táctica</Spanish>
+        <Czech>Taktické Obrazovky</Czech>
+      </Key>
+      <Key ID="STR_Tactical_Screen_On_F">
+        <Original>Tactical Screen (On)</Original>
+        <English>Tactical Screen (On)</English>
+        <Russian>Экран (Включен)</Russian>
+        <German>Taktikbildschirm (An)</German>
+        <Portuguese>Tela Tático  (Acesa)</Portuguese>
+        <Italian>Schermo Tattico (Acceso)</Italian>
+        <Polish>Ekran Taktyczny (Wł.)</Polish>
+        <French>Écran Tactique (Allumé)</French>
+        <Spanish>Pantalla Táctica (Encendida)</Spanish>
+        <Czech>Taktické Obrazovky (Zapnutá)</Czech>
+      </Key>
+      <Key ID="STR_V_Press_AAN_F">
+        <Original>Vest (Press) (AAN)</Original>
+        <Chinese>背心（Press）(AAN)</Chinese>
+        <French>Gilet (presse)  (AAN)</French>
+        <Spanish>Chaleco (prensa) (AAN)</Spanish>
+        <Italian>Gilet (stampa) (AAN)</Italian>
+        <Hungarian>Vest (Press) (AAN)</Hungarian>
+        <Polish>Kamizelka (prasa) (AAN)</Polish>
+        <Russian>Жилет (пресса) (AAN)</Russian>
+        <German>Weste (Presse) (AAN)</German>
+        <Czech>Vesta (tisk) (AAN)</Czech>
+        <English>Vest (Press) (AAN)</English>
+        <Qatest>loc-test</Qatest>
+        <Portuguese>Colete (pressão) (AAN)</Portuguese>
+        <Korean>조끼(언론) (AAN)</Korean>
+        <Chinesesimp>背心（压平）(AAN)</Chinesesimp>
+        <Japanese>ベスト（プレス）(AAN)</Japanese>
+        <Turkish>Yelek (Basın) (AAN)</Turkish>
+      </Key>
+    </Container>
+  </Container>
+</Project>

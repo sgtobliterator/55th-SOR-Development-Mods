@@ -1,0 +1,93 @@
+ambient[]={0.5,0.5,0.5,1};
+diffuse[]={0.40000001,0.40000001,0.40000001,1};
+forceddiffuse[]={0,0,0,1};
+emmisive[]={0,0,0,0};
+specular[]={0.2,0.2,0.2,1};
+specularpower=100;
+pixelshaderid="super";
+vertexshaderid="super";
+class stage1
+{
+	texture="3den_objects\objects_f\idap_mug_f\data\idap_mug_nohq.paa";
+	uvsource="tex";
+	class uvtransform
+	{
+		aside[]={1,0,0};
+		up[]={0,1,0};
+		dir[]={0,0,0};
+		pos[]={0,0,0};
+	};
+};
+class stage2
+{
+	texture="#(argb,8,8,3)color(0.5,0.5,0.5,0.5,dt)";
+	uvsource="tex";
+	class uvtransform
+	{
+		aside[]={1,0,0};
+		up[]={0,1,0};
+		dir[]={0,0,0};
+		pos[]={0,0,0};
+	};
+};
+class stage3
+{
+	texture="#(argb,8,8,3)color(0.0,0.0,0.0,0.0,mc)";
+	uvsource="tex";
+	class uvtransform
+	{
+		aside[]={1,0,0};
+		up[]={0,1,0};
+		dir[]={0,0,0};
+		pos[]={0,0,0};
+	};
+};
+class stage4
+{
+	texture="#(argb,8,8,3)color(1.0,1.0,1.0,1.0,as)";
+	uvsource="tex";
+	class uvtransform
+	{
+		aside[]={1,0,0};
+		up[]={0,1,0};
+		dir[]={0,0,0};
+		pos[]={0,0,0};
+	};
+};
+class stage5
+{
+	texture="3den_objects\objects_f\idap_mug_f\data\idap_mug_smdi.paa";
+	uvsource="tex";
+	class uvtransform
+	{
+		aside[]={1,0,0};
+		up[]={0,1,0};
+		dir[]={0,0,0};
+		pos[]={0,0,0};
+	};
+};
+class stage6
+{
+	texture="#(ai,64,64,1)fresnel(1.3,0.4)";
+	uvsource="tex";
+	class uvtransform
+	{
+		aside[]={1,0,0};
+		up[]={0,1,0};
+		dir[]={0,0,0};
+		pos[]={0,0,0};
+	};
+};
+class stage7
+{
+	texture="a3\data_f\env_land_co.paa";
+	useworldenvmap="true";
+	uvsource="tex";
+	class uvtransform
+	{
+		aside[]={1,0,0};
+		up[]={0,1,0};
+		dir[]={0,0,0};
+		pos[]={0,0,0};
+	};
+};

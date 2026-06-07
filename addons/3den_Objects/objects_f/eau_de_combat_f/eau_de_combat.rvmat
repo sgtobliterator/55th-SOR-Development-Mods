@@ -1,0 +1,23 @@
+ambient[]={1,1,1,1};
+diffuse[]={1,1,1,1};
+forcedDiffuse[]={0,0,0,0};
+emmisive[]={0,0,0,1};
+specular[]={0.5,0.5,0.5,0};
+specularPower=3.5;
+renderFlags[]=
+{
+	"NoAlphaWrite"
+};
+nextPass="3den_objects\objects_f\eau_de_combat_f\glass_pass.rvmat";
+PixelShaderID="Glass";
+VertexShaderID="Glass";
+class Stage1
+{
+	texture="#(ai,64,64,1)fresnelGlass()";
+	uvSource="none";
+};
+class Stage2
+{
+	texture="3den_objects\objects_f\eau_de_combat_f\reflect_co.paa";
+	uvSource="none";
+};
