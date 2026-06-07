@@ -1,0 +1,101 @@
+[img]https://i.imgur.com/NrstAKw.gif[/img]
+
+[h1]FORGES OF DORN: Zeus Additions[/h1]
+[i]Zeus & 3DEN Module Expansion[/i]
+
+[b]Forges of Dorn[/b] is a collection of streamlined tools designed to automate AI behavior, spawning, and mission flow. It aims to improve the Zeus experience by reducing the workload during large-scale operations—minimizing repetitive manual setup and the need for constant micro-management.
+
+[b]Now updated with Vanilla & CBA fallbacks[/b], allowing core modules to function without requiring LAMBS as a hard dependency.
+
+[h2]Core Features[/h2]
+[list]
+[*] [b]Spawn AI Group[/b] (Zeus & 3DEN) - Advanced spawning with [VANILLA], [CBA], or [LAMBS] tasks. Supports faction/group classnames and quoted/unquoted strings.
+[*] [b]Garrison Area[/b] (Zeus) - Instantly occupy buildings. includes a vanilla fallback that uses Hold/Suppress logic and scalable area patrols, height filters and more.
+[*] [b]Defense OP Generator[/b] (Zeus & 3DEN) - Create infinite wave-defense scenarios with directional arcs and Line-of-Sight spawn checks.
+[*] [b]FOD Tasks[/b] (Zeus) - Context menu and waypoint types for LAMBS (Ambush, Hit & Run, QRF). Now loads dynamically only when LAMBS is present.
+[*] [b]Utility Tools[/b] - Vehicle Garage (3DEN/Zeus), Weapon Add/Remove, and Faction Variable Logger.
+[/list]
+
+[h2]Spawn AI Group (3DEN & Zeus)[/h2]
+Spawn fully configured groups with a single click or trigger. The UI now features Prefix Tags ([LAMBS], [CBA], [VANILLA]) to clearly show which tasks require specific dependencies.
+
+[b]New Flexibility:[/b]
+[list]
+[*] [b]Smart Input:[/b] Enter unit classnames with or without quotes (e.g., [i]O_Soldier_F[/i] or [i]"O_Soldier_F"[/i]).
+[*] [b]Faction & Group Support:[/b] (3DEN) Define a [b]Faction Classname[/b] or [b]CfgGroups entry[/b] (e.g., [i]OIA_InfSentry[/i]) to automate unit selection.
+[*] [b]Expanded Tasks:[/b] Includes new [b]Vanilla[/b] (Sentry, Guard, Seek & Destroy) and [b]CBA[/b] (Attack, Defend, Patrol, Search) behaviors.
+[/list]
+
+[h2]Garrison Area[/h2]
+Populate a zone with AI defenders instantly.
+[list]
+[*] [b]LAMBS Version:[/b] Uses native LAMBS Garrison logic for dynamic building defense.
+[*] [b]Vanilla Fallback:[/b] Automatically active if LAMBS is missing. Units occupy buildings with [b]Hold/Suppress[/b] logic, disabling pathing until engaged.
+[*] [b]Area Patrols:[/b] Scalable patrol elements (1-4 units) will walk perimeter routes to secure the objective.
+[/list]
+
+[h2]Defense OP Generator[/h2]
+Continuously spawns AI waves attacking a fixed position.
+[list]
+[*] [b]Zeus:[/b] Use the multi-step dialog to set faction, radius, and interval. Delete the [b]VR Selector[/b] to stop the assault.
+[*] [b]3DEN:[/b] Pre-configure attributes and activate via trigger. Supports [b]Max Duration[/b] or custom [b]SQF Stop Conditions[/b].
+[*] [b]Features:[/b] Supports directional attacks (sector arcs), Line-of-Sight checks (spawning behind cover), and "Players Only" targeting.
+[/list]
+
+[h2]FOD Tasks (ZEN Waypoints)[/h2]
+Custom tasks integrated into the ZEN context menu and waypoint list. Note: This module now uses an optional config and will only load if [b]LAMBS_WP[/b] is detected.
+[list]
+[*] [b]Setup Ambush:[/b] Move to cover, go silent, and wait for contact.
+[*] [b]Hit & Run:[/b] Engage briefly, retreat, and reposition—repeat indefinitely.
+[*] [b]Reserve/QRF:[/b] Hold position until enemies are detected nearby, then rush to assist.
+[/list]
+
+[i]Requires [url=https://steamcommunity.com/sharedfiles/filedetails/?id=1858075458]LAMBS[/url] for FULL usage, but works fine without.
+
+[h2]"Log Faction Variables" - 3DEN Editor Tool[/h2]
+A small quality-of-life tool for scenario builders. Select any unit in the 3DEN editor, right-click and choose [b]Log Faction Variables (FOD_ZA)[/b] under the [b]Log[/b] submenu. The faction classname and every group classname from that faction's CfgGroups entry are copied straight to your clipboard, one per line - ready to paste into module fields or scripts.
+
+[b]LOTS OF SETTINGS![/b]
+The mod is very configurable as per our design philosophy, this can all be found in the CBA_A3 provided Addon settings.
+
+[h1]FAQ[/h1]
+[b]Q:[/b] Does the Vehicle Garage have a Whitelist/Blacklist?
+[b]A:[/b] Yes, you can block vehicles in a bunch of ways (side, classnames, etc.). Instead of hiding them, the vehicles stay in the list but are unspawnable (greyed out). You can however 'remove' an entire vehicle category.
+
+[h2]Future Plans:[/h2]
+- [strike]'Music Queue' module[/strike]
+- [strike]Charge Module[/strike] [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3560796660]Someone already made this [/url]
+
+[h1]COMPATIBILITY[/h1]
+✔ Works together with [i]LAMBS[/i]
+✔ Designed with multiplayer in mind.
+✔ Lightweight performance impact (optimized light-weight scripts).
+
+[h1]CREDITS[/h1]
+[b]Bohemia Interactive[/b] - For Arma 3, duh.
+[b]'The VII Legion: Imperial Fists' Developers[/b]
+[b]Basipek[/b] - Contributor
+[b]nKenny, Diwako, Joko and Contributors - LAMBS_Danger.fsm[/b]
+[b]DCON[/b] - [url=https://steamcommunity.com/sharedfiles/filedetails/?id=1420266916]DCON's Multiplayer Vehicle Spawner[/url] (shared code)
+[b]Katsuobusi24[/b] - [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2552401753]Garage Spawner with Dynamic Vehicle Loadouts[/url] (shared code)
+[b]Community Testers[/b] - For feedback and bug reports.
+
+[h3] [b]Join the Forges of Dorn Community![/b] [/h3]
+[b] Come hang out at [url=https://discord.gg/msSEUbPDPB]The Forges of Dorn Discord[/url] [/b]
+
+[i]Special thanks to my Patreon and Ko-Fi Supporters for supporting me! :))[/i]
+[url=https://www.patreon.com/PhenosiWorkshop][img]https://i.imgur.com/CRiDaCQ.png[/img][/url]
+[url=https://ko-fi.com/phenosi][img]https://i.imgur.com/ntalcmM.png[/img][/url]
+
+[url=https://www.youtube.com/channel/UCl4P2TtjgUPqKC_R4HxCyIQ] Follow Phenosi on YouTube[/url]
+
+[h1]LICENSE[/h1]
+[b]CC BY-NC-SA 4.0[/b] - Share & adapt with credit, no commercial use.
+[url=https://creativecommons.org/licenses/by-nc-sa/4.0/]↗ Full License[/url]
+[img]https://i.imgur.com/zk0LQPo.png[/img]
+
+[h1]Support & Feedback:[/h1]
+If you encounter any issues or have suggestions for improvement, please reach out via the comments section or join our [url=https://discord.gg/msSEUbPDPB][b]Forges of Dorn Series[/b][/url] Modding Discord.
+
+
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀   Please[b] READ[/b] the Workshop page and check out your own setup [i]in-game[/i] ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  [b]before[/b] asking [u]Questions[/u] or [u]Reporting Bugs[/u] <--[url=https://discord.gg/msSEUbPDPB][b]Discord[/b][/url]

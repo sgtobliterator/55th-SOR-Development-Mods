@@ -1,0 +1,23 @@
+#include "script_component.hpp"
+
+ADDON = false;
+
+PREP_RECOMPILE_START;
+#include "XEH_PREP.hpp"
+PREP_RECOMPILE_END;
+
+#include "initSettings.inc.sqf"
+#include "initKeybinds.inc.sqf"
+
+call FUNC(compileActions);
+
+GVAR(hovered) = objNull;
+GVAR(selected) = [];
+GVAR(mousePos) = [0.5, 0.5];
+GVAR(canContext) = true;
+GVAR(holdingRMB) = false;
+GVAR(contextGroups) = [];
+
+["zen_curatorDisplayLoaded", LINKFUNC(initDisplayCurator)] call CBA_fnc_addEventHandler;
+
+ADDON = true;

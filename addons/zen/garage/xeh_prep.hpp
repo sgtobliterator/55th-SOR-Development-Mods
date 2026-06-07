@@ -1,0 +1,17 @@
+PREP(applyToAll);
+PREP(closeGarage);
+PREP(getVehicleData);
+PREP(handleMouse);
+PREP(onAnimationSelect);
+PREP(onKeyDown);
+PREP(onMouseButtonClick);
+PREP(onMouseButtonDown);
+PREP(onMouseButtonUp);
+PREP(onMouseZChanged);
+PREP(onTabSelect);
+PREP(onTextureSelect);
+PREP(openGarage);
+PREP(populateLists);
+PREP(showVehicleInfo);
+PREP(toggleInterface);
+PREP(updateCamera);

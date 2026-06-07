@@ -1,0 +1,27 @@
+ControlBarDummy : 1866
+
+GarageStatsGroup : 1867
+┣ GarageSpawnButton : 1868
+┣ GarageStatsModPicture : 1869
+┣ GarageStatsMaxSpeed : 1870
+┗ GarageStatsArmor : 1871
+
+GarageSettingGroup : 1872
+┣ GaragePylonGroup : 1873
+┃   ┣ GaragePylonToggle : 1874
+┃   ┣ GaragePylonUIPicture : 1875
+┃   ┣ GaragePylonPreset : 1876
+┃   ┗ GaragePylonMirror : 1877
+┃
+┗ GarageOptionGroup : 1878
+     ┣ GarageOptionToggle : 1879
+     ┣ GarageDamageList : 1880
+     ┣ GarageDamageListArrowLeft : 1881
+     ┣ GarageDamageListArrowRight : 1882
+     ┣ GarageDamageDelayMin : 1883
+     ┣ GarageDamageDelayMax : 1884
+     ┣ GarageInsigniaPoint : 1885
+     ┗ GarageInsigniaTex : 1886
+
+GaragePylons : 1890~
+GaragePylonTurrets : 1990~

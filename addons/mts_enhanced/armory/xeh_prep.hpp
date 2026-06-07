@@ -1,0 +1,15 @@
+PREP(buttonCreateEquipment);
+PREP(createEquipment);
+PREP(equipLoadout);
+PREP(equipBackpack);
+PREP(initEquipment);
+PREP(openArmory);
+PREP(openArsenal);
+PREP(openNewEquipmentDialog);
+PREP(saveEquipment);
+PREP(setEditArea);
+PREP(toggleSettings);
+PREP(updateArsenal);
+PREP(updateBackpack);
+PREP(updateEditors);
+PREP(updateLoadout);

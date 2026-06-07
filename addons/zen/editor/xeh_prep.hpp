@@ -1,0 +1,17 @@
+PREP(addGroupIcons);
+PREP(addModIcons);
+PREP(declutterEmptyTree);
+PREP(handleCuratorPinged);
+PREP(handleKeyDown);
+PREP(handleKeyUp);
+PREP(handleLoad);
+PREP(handleModeButtons);
+PREP(handleObjectPlaced);
+PREP(handleSearchButton);
+PREP(handleSearchClick);
+PREP(handleSearchKeyDown);
+PREP(handleSearchKeyUp);
+PREP(handleSideButtons);
+PREP(handleTreeButtons);
+PREP(handleUnload);
+PREP(pingCurators);

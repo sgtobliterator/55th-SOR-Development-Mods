@@ -1,0 +1,9 @@
+PREP(addAction);
+PREP(close);
+PREP(compileActions);
+PREP(createAction);
+PREP(createContextGroup);
+PREP(getActiveActions);
+PREP(initDisplayCurator);
+PREP(open);
+PREP(removeAction);

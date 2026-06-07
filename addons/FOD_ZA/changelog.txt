@@ -1,0 +1,51 @@
+steam version:
+[h3]FIXED:[/h3]
+🛠 N/A
+
+[h3]ADDED:[/h3]
++ Spawn AI Group (3DEN): new Faction Classname attribute - set a CfgFactionClasses classname (e.g. OPF_F) to draw units from that faction, overriding the Unit Classnames field
++ Spawn AI Group (3DEN + Zeus): added "No Task" task option - simply spawns units with no LAMBS waypoint assigned. Does not require LAMBS Waypoints.
++ Spawn AI Group (3DEN + Zeus): unit classnames can now be entered with or without surrounding quotes (e.g. both O_Soldier_F,O_Soldier_GL_F and "O_Soldier_F","O_Soldier_GL_F" are accepted)
++ Garrison Area (Zeus): vanilla fallback version now available when LAMBS is not loaded - same faction/radius/unit selection, uses vanilla HOLD and patrol waypoints instead
++ Garrison Area (Zeus, vanilla): non-patrol units have path AI disabled on spawn and stay in position until hit (always reacts) or a nearby shot triggers a break (40% chance) - event handlers clean themselves up after firing
++ Spawn AI Group (3DEN): added two vanilla (no LAMBS) tasks - "Seek & Destroy" moves the group toward the nearest player using a SAD waypoint, "Garrison (Vanilla)" places units in nearby building positions with hold/suppress logic
++ Garrison Area (Zeus, vanilla): patrol element restructured - a single group of 1-4 units (scaled to total spawned) now patrols the area instead of every building group; patrol walks a triangle route at SAFE/LIMITED speed
++ Spawn AI Group (3DEN): added CfgGroups Classname attribute - set a CfgGroups entry (e.g. OIA_InfSentry) to spawn a predefined group; priority is Faction > CfgGroups > Unit Classnames; spawning now uses BIS_fnc_spawnGroup throughout
++ Spawn AI Group (3DEN): Faction Classname field now shows "(optional)" to clarify it is not required
++ Spawn AI Group (3DEN + Zeus): added [VANILLA] Sentry and [VANILLA] Guard task options using native Arma 3 waypoint types
++ Spawn AI Group (3DEN + Zeus): added [CBA] Attack, [CBA] Defend, [CBA] Patrol, [CBA] Search Area task options using CBA_fnc_ waypoint functions (CBA always loaded, no extra dependency)
++ Spawn AI Group (3DEN + Zeus): all task options now show prefix tags in the UI ([LAMBS], [CBA], [VANILLA]) so it is clear which dependency each task requires
+
+[h3]UPDATED:[/h3]
+⭮ Moved the new LAMBS-style Waypoints and context menu buttons to a optional config that ONLY loads when LAMBS_WP is present
+[h3]DELETED:[/h3]
+- N/A
+
+This update serves as another step to get away from always needing LAMBS to use the mod's features.
+
+[i]Found a bug?[/i] [b]Report it in the Discord![/b]
+
+discord:
+@everyone
+# [Forges of Dorn] Zeus Additions `UPDATE` :yellow_square: :Zeus: :heavy_plus_sign:
+small quality-of-life update for the Spawn AI Group module
+
+### Changelog:
+**ADDED:**
+:heavy_plus_sign: **Spawn AI Group - Faction Classname (3DEN)**: new attribute in the 3DEN module. Set a CfgFactionClasses classname (e.g. OPF_F) and units will be drawn from that faction, overriding the Unit Classnames field.
+:heavy_plus_sign: **Spawn AI Group - No Task** - new task option in both 3DEN and Zeus. Spawns the group with no LAMBS waypoint. Useful when you want to control AI behaviour manually or via triggers. Does not require LAMBS Waypoints.
+:heavy_plus_sign: **Spawn AI Group - Quoted classname support**: unit classnames can now be pasted with or without surrounding quotes in both 3DEN and Zeus (e.g. both O_Soldier_F,O_Soldier_GL_F and "O_Soldier_F","O_Soldier_GL_F" work).
+:heavy_plus_sign: **Garrison Area - Vanilla fallback** - if LAMBS Waypoints is not loaded, a vanilla version of the Garrison Area Zeus module is now available. Same faction, radius, and unit filtering. Units are placed directly in building positions and given vanilla HOLD or patrol waypoints. No LAMBS required.
+:heavy_plus_sign: **Garrison Area (vanilla) - Suppression reaction**: non-patrol units have path AI disabled on spawn so they hold their building position. A hit always breaks them out, a nearby shot has a 40% chance to. Event handlers remove themselves after firing.
+:heavy_plus_sign: **Spawn AI Group (3DEN) - Vanilla tasks** - two new task options that work without LAMBS Waypoints. "Seek & Destroy" moves the group toward the nearest player with a SAD waypoint at full speed. "Garrison (Vanilla)" places units in nearby building positions hold/suppress-break behaviour. ("Random" task respects LAMBS availability)
+:heavy_plus_sign: **Garrison Area (Zeus, vanilla) - Patrol restructure**: instead of every building group patrolling independently, a single patrol element of 1-4 units (scaled to total spawned) is now extracted and given a SAFE/LIMITED triangle route around the garrison center. All other units stay put with hold/suppress behaviour.
+:heavy_plus_sign: **Spawn AI Group - CfgGroups Classname (3DEN)**: new optional attribute. Set a CfgGroups entry (e.g. OIA_InfSentry) to spawn a predefined group. Priority: Faction > CfgGroups > Unit Classnames. Spawning now uses BIS_fnc_spawnGroup throughout.
+:heavy_plus_sign: **Spawn AI Group - New task options**: [VANILLA] Sentry (native Arma 3 Sentry WP at random position within radius) and [VANILLA] Guard (Guard WP at spawn position) added to both 3DEN and Zeus. No extra dependency.
+:heavy_plus_sign: **Spawn AI Group - CBA tasks**: [CBA] Attack, [CBA] Defend, [CBA] Patrol, [CBA] Search Area added to both 3DEN and Zeus. CBA is always loaded so these are always available, no LAMBS required.
+:heavy_plus_sign: **Spawn AI Group - Task prefix tags**: all task options in 3DEN and Zeus now show [LAMBS], [CBA], or [VANILLA] prefix in the UI so the required dependency is immediately clear.
+**UPDATED:**
+⭮ Moved the new LAMBS-style Waypoints and context menu buttons to a optional config that ONLY loads when LAMBS_WP is present
+
+This update serves as another step to get away from always needing LAMBS to use the mod's features.
+
+:link: [[Forges of Dorn] Zeus Additions (Workshop Link)](https://steamcommunity.com/sharedfiles/filedetails/?id=3500935186) :arrow_left:

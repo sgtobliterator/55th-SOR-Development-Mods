@@ -1,0 +1,17 @@
+PREP(addAttribute);
+PREP(addButton);
+PREP(addDisplay);
+PREP(check);
+PREP(compileWaypoints);
+PREP(confirm);
+PREP(gui_checkboxes);
+PREP(gui_code);
+PREP(gui_combo);
+PREP(gui_edit);
+PREP(gui_icons);
+PREP(gui_loiter);
+PREP(gui_slider);
+PREP(gui_toolbox);
+PREP(gui_waypoint);
+PREP(handleMarkerPlaced);
+PREP(open);
