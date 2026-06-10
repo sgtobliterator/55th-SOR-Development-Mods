@@ -1,0 +1,285 @@
+// Civilian zone-settings dialog. Mirrors the military layout grammar
+// from RscDisplayZoneSettings.hpp (uniform PAD = 0.02, dark section
+// bands, separator above Total) but shorter:
+//   Dialog frame: x=0.20..0.80, y=0.22..0.65 (h=0.43)
+//   Left "General Settings": 5 rows (no Skill cap, no Include officer)
+//   Right "Role Mix":        3 sliders (Residents / Idlers / Wanderers)
+// IDC range: 70100+ (military uses 70000+).
+
+class digii_ambient_RscDisplayZoneSettingsCivilian {
+    idd = 70100;
+    movingEnable = 1;
+    enableSimulation = 1;
+    onLoad = "_this spawn digii_ambient_zones_fnc_initZoneDialogCivilian;";
+    onUnload = "uiNamespace setVariable ['digii_ambient_RscDisplayZoneSettingsCivilian', displayNull]";
+
+    controlsBackground[] = { "Background", "Frame", "TitleBar" };
+    controls[] = {
+        "GeneralSettingsHeader",
+        "RadiusLabel",         "RadiusEdit",
+        "SubFactionLabel",     "SubFactionCombo",
+        "DensityLabel",        "DensityEdit",
+        "UseBuildingsLabel",   "UseBuildingsCheck",
+        "UseRoadsLabel",       "UseRoadsCheck",
+        "RoleMixHeader",
+        "ResidentsLabel",      "ResidentsSlider",
+        "IdlersLabel",         "IdlersSlider",
+        "WanderersLabel",      "WanderersSlider",
+        "TotalSeparator",
+        "TotalLabel",
+        "FeedbackText",
+        "ApplyButton",         "CancelButton"
+    };
+
+    class Background: digii_ambient_IGUIBack {
+        idc = -1;
+        x = "0.20 * safezoneW + safezoneX";
+        y = "0.22 * safezoneH + safezoneY";
+        w = "0.60 * safezoneW";
+        h = "0.43 * safezoneH";
+    };
+    class Frame: digii_ambient_RscFrame {
+        idc = -1;
+        x = "0.20 * safezoneW + safezoneX";
+        y = "0.22 * safezoneH + safezoneY";
+        w = "0.60 * safezoneW";
+        h = "0.43 * safezoneH";
+    };
+    class TitleBar: digii_ambient_RscText {
+        idc = 70101;
+        text = CSTRING(dialog_civilian_title);
+        x = "0.20 * safezoneW + safezoneX";
+        y = "0.22 * safezoneH + safezoneY";
+        w = "0.60 * safezoneW";
+        h = "0.04 * safezoneH";
+        colorBackground[] = {0.15, 0.15, 0.15, 1};
+        style = 2;
+        sizeEx = "(((((safezoneW / safezoneH) min 1.2) / 1.2) / 22) * 1)";
+    };
+
+    // ===== SECTION HEADERS =====
+
+    class GeneralSettingsHeader: digii_ambient_RscText {
+        idc = -1;
+        text = CSTRING(dialog_generalSettingsHeader);
+        x = "0.22 * safezoneW + safezoneX";
+        y = "0.28 * safezoneH + safezoneY";
+        w = "0.26 * safezoneW";
+        h = "0.03 * safezoneH";
+        style = 2;
+        colorBackground[] = {0.1, 0.1, 0.1, 0.8};
+    };
+
+    class RoleMixHeader: digii_ambient_RscText {
+        idc = -1;
+        text = CSTRING(dialog_roleMixHeader);
+        x = "0.52 * safezoneW + safezoneX";
+        y = "0.28 * safezoneH + safezoneY";
+        w = "0.26 * safezoneW";
+        h = "0.03 * safezoneH";
+        style = 2;
+        colorBackground[] = {0.1, 0.1, 0.1, 0.8};
+    };
+
+    // ===== LEFT COLUMN: GENERAL SETTINGS =====
+
+    class RadiusLabel: digii_ambient_RscText {
+        idc = -1;
+        text = CSTRING(dialog_radius);
+        x = "0.22 * safezoneW + safezoneX";
+        y = "0.32 * safezoneH + safezoneY";
+        w = "0.13 * safezoneW";
+        h = "0.03 * safezoneH";
+        tooltip = CSTRING(dialog_radius_tooltip);
+    };
+    class RadiusEdit: digii_ambient_RscEdit {
+        idc = 70110;
+        x = "0.36 * safezoneW + safezoneX";
+        y = "0.32 * safezoneH + safezoneY";
+        w = "0.12 * safezoneW";
+        h = "0.03 * safezoneH";
+        text = "75";
+    };
+
+    class SubFactionLabel: digii_ambient_RscText {
+        idc = -1;
+        text = CSTRING(dialog_subFaction);
+        x = "0.22 * safezoneW + safezoneX";
+        y = "0.36 * safezoneH + safezoneY";
+        w = "0.13 * safezoneW";
+        h = "0.03 * safezoneH";
+        tooltip = CSTRING(dialog_subFaction_tooltip);
+    };
+    class SubFactionCombo: digii_ambient_RscCombo {
+        idc = 70111;
+        x = "0.36 * safezoneW + safezoneX";
+        y = "0.36 * safezoneH + safezoneY";
+        w = "0.12 * safezoneW";
+        h = "0.03 * safezoneH";
+    };
+
+    class DensityLabel: digii_ambient_RscText {
+        idc = -1;
+        text = CSTRING(dialog_density);
+        x = "0.22 * safezoneW + safezoneX";
+        y = "0.40 * safezoneH + safezoneY";
+        w = "0.13 * safezoneW";
+        h = "0.03 * safezoneH";
+        tooltip = CSTRING(dialog_density_tooltip);
+    };
+    class DensityEdit: digii_ambient_RscEdit {
+        idc = 70113;
+        x = "0.36 * safezoneW + safezoneX";
+        y = "0.40 * safezoneH + safezoneY";
+        w = "0.12 * safezoneW";
+        h = "0.03 * safezoneH";
+        text = "5";
+    };
+
+    class UseBuildingsLabel: digii_ambient_RscText {
+        idc = -1;
+        text = CSTRING(dialog_useBuildings);
+        x = "0.22 * safezoneW + safezoneX";
+        y = "0.44 * safezoneH + safezoneY";
+        w = "0.13 * safezoneW";
+        h = "0.03 * safezoneH";
+        tooltip = CSTRING(dialog_useBuildings_tooltip);
+    };
+    class UseBuildingsCheck: digii_ambient_RscCheckBox {
+        idc = 70114;
+        x = "0.36 * safezoneW + safezoneX";
+        y = "0.44 * safezoneH + safezoneY";
+        w = "0.025 * safezoneW";
+        h = "0.03 * safezoneH";
+    };
+
+    class UseRoadsLabel: digii_ambient_RscText {
+        idc = -1;
+        text = CSTRING(dialog_useRoads);
+        x = "0.22 * safezoneW + safezoneX";
+        y = "0.48 * safezoneH + safezoneY";
+        w = "0.13 * safezoneW";
+        h = "0.03 * safezoneH";
+        tooltip = CSTRING(dialog_useRoads_tooltip);
+    };
+    class UseRoadsCheck: digii_ambient_RscCheckBox {
+        idc = 70115;
+        x = "0.36 * safezoneW + safezoneX";
+        y = "0.48 * safezoneH + safezoneY";
+        w = "0.025 * safezoneW";
+        h = "0.03 * safezoneH";
+    };
+
+    // ===== RIGHT COLUMN: ROLE MIX =====
+
+    class ResidentsLabel: digii_ambient_RscText {
+        idc = 70131;
+        text = "Residents: 34%"; // overwritten on dialog open by fnc_updateRoleMixDisplayCivilian
+        x = "0.52 * safezoneW + safezoneX";
+        y = "0.32 * safezoneH + safezoneY";
+        w = "0.12 * safezoneW";
+        h = "0.03 * safezoneH";
+        tooltip = CSTRING(role_residents_tooltip);
+    };
+    class ResidentsSlider: digii_ambient_RscSlider {
+        idc = 70130;
+        x = "0.65 * safezoneW + safezoneX";
+        y = "0.325 * safezoneH + safezoneY";
+        w = "0.13 * safezoneW";
+        h = "0.025 * safezoneH";
+        onSliderPosChanged = "_this call digii_ambient_zones_fnc_updateRoleMixDisplayCivilian;";
+    };
+
+    class IdlersLabel: digii_ambient_RscText {
+        idc = 70133;
+        text = "Idlers: 33%"; // overwritten on dialog open by fnc_updateRoleMixDisplayCivilian
+        x = "0.52 * safezoneW + safezoneX";
+        y = "0.36 * safezoneH + safezoneY";
+        w = "0.12 * safezoneW";
+        h = "0.03 * safezoneH";
+        tooltip = CSTRING(role_idlers_tooltip);
+    };
+    class IdlersSlider: digii_ambient_RscSlider {
+        idc = 70132;
+        x = "0.65 * safezoneW + safezoneX";
+        y = "0.365 * safezoneH + safezoneY";
+        w = "0.13 * safezoneW";
+        h = "0.025 * safezoneH";
+        onSliderPosChanged = "_this call digii_ambient_zones_fnc_updateRoleMixDisplayCivilian;";
+    };
+
+    class WanderersLabel: digii_ambient_RscText {
+        idc = 70135;
+        text = "Wanderers: 33%"; // overwritten on dialog open by fnc_updateRoleMixDisplayCivilian
+        x = "0.52 * safezoneW + safezoneX";
+        y = "0.40 * safezoneH + safezoneY";
+        w = "0.12 * safezoneW";
+        h = "0.03 * safezoneH";
+        tooltip = CSTRING(role_wanderers_tooltip);
+    };
+    class WanderersSlider: digii_ambient_RscSlider {
+        idc = 70134;
+        x = "0.65 * safezoneW + safezoneX";
+        y = "0.405 * safezoneH + safezoneY";
+        w = "0.13 * safezoneW";
+        h = "0.025 * safezoneH";
+        onSliderPosChanged = "_this call digii_ambient_zones_fnc_updateRoleMixDisplayCivilian;";
+    };
+
+    // Thin separator between per-role rows and the Total sum.
+    class TotalSeparator: digii_ambient_RscText {
+        idc = -1;
+        text = "";
+        x = "0.52 * safezoneW + safezoneX";
+        y = "0.47 * safezoneH + safezoneY";
+        w = "0.26 * safezoneW";
+        h = "0.002 * safezoneH";
+        colorBackground[] = {0.5, 0.5, 0.5, 0.5};
+    };
+
+    class TotalLabel: digii_ambient_RscText {
+        idc = 70140;
+        text = "Total: 100%"; // overwritten on dialog open by fnc_updateRoleMixDisplayCivilian
+        x = "0.52 * safezoneW + safezoneX";
+        y = "0.48 * safezoneH + safezoneY";
+        w = "0.26 * safezoneW";
+        h = "0.03 * safezoneH";
+        style = 2;
+        tooltip = CSTRING(dialog_total_tooltip);
+    };
+
+    // ===== FEEDBACK LINE =====
+
+    class FeedbackText: digii_ambient_RscText {
+        idc = 70180;
+        text = "";
+        x = "0.22 * safezoneW + safezoneX";
+        y = "0.53 * safezoneH + safezoneY";
+        w = "0.56 * safezoneW";
+        h = "0.04 * safezoneH";
+        colorText[] = {1, 0.35, 0.35, 1};
+        style = 2;
+        sizeEx = "(((((safezoneW / safezoneH) min 1.2) / 1.2) / 22) * 1)";
+    };
+
+    // ===== BUTTONS =====
+
+    class ApplyButton: digii_ambient_RscButton {
+        idc = 70190;
+        text = CSTRING(dialog_apply);
+        x = "0.41 * safezoneW + safezoneX";
+        y = "0.59 * safezoneH + safezoneY";
+        w = "0.08 * safezoneW";
+        h = "0.04 * safezoneH";
+        onButtonClick = "[] call digii_ambient_zones_fnc_applyZoneDialogCivilian;";
+    };
+    class CancelButton: digii_ambient_RscButton {
+        idc = 70191;
+        text = CSTRING(dialog_cancel);
+        x = "0.51 * safezoneW + safezoneX";
+        y = "0.59 * safezoneH + safezoneY";
+        w = "0.08 * safezoneW";
+        h = "0.04 * safezoneH";
+        onButtonClick = "[] call digii_ambient_zones_fnc_cancelZoneDialogCivilian;";
+    };
+};

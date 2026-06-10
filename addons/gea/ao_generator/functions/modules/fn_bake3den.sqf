@@ -1,0 +1,311 @@
+// =====================================================================
+// GEA_fnc_bake3DEN
+//   Eden-editor: turn a placed "Generate Enemy AO" module into REAL,
+//   editable editor entities (groups, statics, vehicles) you can drag,
+//   reposition and tweak. Patrol behaviour matches Zeus (BIS_fnc_taskPatrol
+//   runs from the group's init at mission start).
+//
+//   Normally invoked automatically by the module itself: tick the module
+//   attribute "Generate in editor now" and confirm — see fn_moduleInit's
+//   attributesChanged3DEN hook. Can also be called manually:
+//       _arrayOfModules call GEA_fnc_bake3DEN;   // bake these modules
+//       call GEA_fnc_bake3DEN;                    // bake selected / all
+//
+//   WHAT IT DOES:
+//     - Patrol groups   -> editable editor groups; group init runs
+//       BIS_fnc_taskPatrol at mission start (same as Zeus).
+//     - Garrison groups -> small editable groups inside buildings.
+//     - Static turrets  -> editable static objects, faced outward,
+//       crewed at mission start via a self-contained init line.
+//     - Vehicle patrols -> editable empty vehicles, crewed at mission
+//       start via createVehicleCrew in their init line.
+//     - The module is deleted once baked.
+//
+//   NOTES:
+//     - Air patrols are NOT baked (use the runtime/Zeus path for air).
+//     - Crew for statics/vehicles appears on Play (init line); infantry
+//       are full editor units immediately.
+//     - In Eden, setPos/setDir do NOT persist — placement & facing are
+//       written with set3DENAttribute.
+// =====================================================================
+
+#include "..\..\script_component.hpp"
+
+if (!is3DEN) exitWith {
+    diag_log text "[GEA] bake3DEN called outside 3DEN — ignored.";
+};
+
+params [["_modsIn", [], [[], objNull]]];
+
+// --- Resolve target modules ------------------------------------------
+private _mods = [];
+if (_modsIn isEqualType objNull) then {
+    if (!isNull _modsIn) then { _mods = [_modsIn] };
+} else {
+    _mods = _modsIn;
+};
+// Manual call with nothing passed → selected GEA modules, else all.
+if (_mods isEqualTo []) then {
+    _mods = (get3DENSelected "object") select { (typeOf _x) == "GEA_Module_GenerateAO" };
+};
+if (_mods isEqualTo []) then {
+    _mods = (all3DENEntities select 0) select { (typeOf _x) == "GEA_Module_GenerateAO" };
+};
+if (_mods isEqualTo []) exitWith {
+    systemChat "[GEA] No 'Generate Enemy AO' module selected or found on the map.";
+};
+
+// --- Read an Eden attribute, unwrapping the array form if present -----
+private _attr = {
+    params ["_ent", "_prop", "_def"];
+    private _v = _ent get3DENAttribute _prop;
+    if (isNil "_v") exitWith { _def };
+    // get3DENAttribute returns the value directly for a single entity, but
+    // guard against the wrapped [value] form just in case.
+    if (_v isEqualType [] && { (_prop != "position") && (_prop != "rotation") }) then {
+        _v = if (count _v > 0) then { _v select 0 } else { _def };
+    };
+    if (isNil "_v") exitWith { _def };
+    _v
+};
+
+// --- Expand a group-pool entry into a flat list of unit classnames ----
+//   getGroupsForFaction returns [<cfgPath OR [classnames]>, displayName].
+private _groupUnits = {
+    params ["_entry"];
+    private _t = _entry select 0;
+    if (_t isEqualType []) exitWith { _t };          // already classnames
+    private _units = [];
+    {
+        private _veh = getText (_x >> "vehicle");
+        if (_veh != "") then { _units pushBack _veh };
+    } forEach ("true" configClasses _t);
+    _units
+};
+
+private _totalGroups = 0;
+private _totalStatics = 0;
+private _totalVehicles = 0;
+
+collect3DENHistory {
+{
+    private _m = _x;
+    private _center = getPosATL _m;
+
+    // --- side ---
+    private _sideStr = [_m, "GEA_side", "east"] call _attr;
+    private _side = switch (toLower _sideStr) do {
+        case "west": { west };
+        case "east": { east };
+        case "independent": { independent };
+        case "guer": { independent };
+        case "civilian": { civilian };
+        case "civ": { civilian };
+        default { east };
+    };
+
+    // --- faction (auto-pick first for side if blank) ---
+    private _faction = [_m, "GEA_faction", ""] call _attr;
+    if (_faction isEqualTo "") then {
+        private _facs = [_side] call GEA_fnc_getFactionsForSide;
+        if (count _facs > 0) then { _faction = (_facs select 0) select 0 };
+    };
+
+    private _radius   = [_m, "GEA_radius",         500] call _attr;
+    private _skill    = [_m, "GEA_skill",          0.5] call _attr;
+    private _nPatrol  = round ([_m, "GEA_patrolGroups",   3] call _attr);
+    private _nGarr    = round ([_m, "GEA_garrisonGroups", 5] call _attr);
+    private _nStatic  = round ([_m, "GEA_staticTurrets",  0] call _attr);
+    private _nVeh     = round ([_m, "GEA_vehiclePatrols", 1] call _attr);
+
+    // --- resolve pools (pure config queries — valid in Eden) ---
+    private _groupPool = [_side, _faction] call GEA_fnc_getGroupsForFaction;
+
+    private _sideNum = switch (_side) do {
+        case east: {0}; case west: {1}; case independent: {2}; case civilian: {3}; default {-1};
+    };
+
+    // Reject VR / virtual-entity soldiers (they share real factions).
+    private _isVirtualMan = {
+        params ["_c", "_cn"];
+        ((getText (_c >> "editorSubcategory")) == "EdSubcat_VirtualEntities")
+            || { _cn isKindOf "VirtualMan_F" }
+            || { toLower _cn find "_vr_" >= 0 }
+    };
+
+    // infantry classnames for garrison/crew (faction, then side fallback)
+    private _infClasses = [];
+    {
+        private _c = _x; private _cn = configName _c;
+        if (getNumber (_c >> "scope") >= 2 && { _cn isKindOf "CAManBase" }
+            && { !([_c, _cn] call _isVirtualMan) }
+            && { getText (_c >> "faction") == _faction }) then {
+            _infClasses pushBack _cn;
+        };
+    } forEach ("true" configClasses (configFile >> "CfgVehicles"));
+    if (_infClasses isEqualTo []) then {
+        {
+            private _c = _x; private _cn = configName _c;
+            if (getNumber (_c >> "scope") >= 2 && { _cn isKindOf "CAManBase" }
+                && { !([_c, _cn] call _isVirtualMan) }
+                && { getNumber (_c >> "side") == _sideNum }) then {
+                _infClasses pushBack _cn;
+            };
+        } forEach ("true" configClasses (configFile >> "CfgVehicles"));
+    };
+
+    // =============================================================
+    //  PATROL GROUPS — editable editor groups (no waypoints)
+    // =============================================================
+    if (_nPatrol > 0 && { !(_groupPool isEqualTo []) }) then {
+        for "_i" from 1 to _nPatrol do {
+            private _units = [selectRandom _groupPool] call _groupUnits;
+            if (_units isEqualTo []) then { continue };
+            private _base = _center getPos [random _radius, random 360];
+            private _grp = grpNull;
+            private _leadU = objNull;
+            {
+                private _p = _base vectorAdd [(_forEachIndex mod 4) * 2 - 3, floor (_forEachIndex / 4) * 2, 0];
+                private _u = if (isNull _grp) then {
+                    create3DENEntity ["Object", _x, _p]
+                } else {
+                    _grp create3DENEntity ["Object", _x, _p]
+                };
+                if (isNull _grp) then { _grp = group _u; _leadU = _u };
+            } forEach _units;
+            if (!isNull _grp) then {
+                _totalGroups = _totalGroups + 1;
+                // Patrol behaviour identical to Zeus: leader's init kicks
+                // off BIS_fnc_taskPatrol around the AO at mission start.
+                if (!isNull _leadU) then {
+                    private _pInit = format [
+                        "if (isServer && {leader group this == this}) then {[group this, getPosATL this, %1] call BIS_fnc_taskPatrol;};",
+                        round _radius
+                    ];
+                    _leadU set3DENAttribute ["init", _pInit];
+                };
+            };
+        };
+    };
+
+    // =============================================================
+    //  GARRISON GROUPS — small editable groups inside buildings
+    // =============================================================
+    if (_nGarr > 0 && { !(_infClasses isEqualTo []) }) then {
+        private _buildings = ([_center, _radius] call GEA_fnc_findBuildings) call BIS_fnc_arrayShuffle;
+        private _placed = 0;
+        while { _placed < _nGarr && { count _buildings > 0 } } do {
+            private _b = _buildings deleteAt 0;
+            private _slots = (_b buildingPos -1) select { !(_x isEqualTo [0,0,0]) && { (_x select 2) > -5 } };
+            if (count _slots < 1) then { continue };
+            private _per = ((2 + floor random 3) min (count _slots)) max 1;
+            private _grp = grpNull;
+            for "_k" from 0 to (_per - 1) do {
+                private _p = _slots select _k;
+                private _cls = selectRandom _infClasses;
+                private _u = if (isNull _grp) then {
+                    create3DENEntity ["Object", _cls, _p]
+                } else {
+                    _grp create3DENEntity ["Object", _cls, _p]
+                };
+                if (isNull _grp) then { _grp = group _u };
+            };
+            if (!isNull _grp) then {
+                _placed = _placed + 1;
+                _totalGroups = _totalGroups + 1;
+            };
+        };
+    };
+
+    // =============================================================
+    //  STATIC TURRETS — editable objects, faced outward, init-crewed
+    // =============================================================
+    if (_nStatic > 0) then {
+        // armed StaticWeapon pool (faction first, then side) — same
+        // "real turret" filter as the runtime spawner.
+        private _isTurret = {
+            params ["_c"];
+            private _tc = _c >> "Turrets";
+            if (!isClass _tc) exitWith { false };
+            private _ok = false;
+            { if (count (getArray (_x >> "weapons")) > 0 || { getText (_x >> "weapon") != "" }) exitWith { _ok = true }; }
+                forEach configProperties [_tc, "isClass _x", true];
+            _ok
+        };
+        private _facStat = []; private _sideStat = [];
+        {
+            private _c = _x; private _cn = configName _c;
+            if (getNumber (_c >> "scope") >= 2 && { _cn isKindOf "StaticWeapon" } && { [_c] call _isTurret }) then {
+                if (getText (_c >> "faction") == _faction) then { _facStat pushBack _cn };
+                if (getNumber (_c >> "side") == _sideNum) then { _sideStat pushBack _cn };
+            };
+        } forEach ("true" configClasses (configFile >> "CfgVehicles"));
+        private _statPool = if (count _facStat > 0) then { _facStat } else { _sideStat };
+
+        if (!(_statPool isEqualTo []) && { !(_infClasses isEqualTo []) }) then {
+            private _sideText = str _side;   // "WEST"/"EAST"/...
+            for "_i" from 1 to _nStatic do {
+                private _dist = (0.5 + random 0.45) * _radius;
+                private _pos  = _center getPos [_dist, random 360];
+                private _cls  = selectRandom _statPool;
+                private _gunner = [_infClasses] call GEA_fnc_pickTurretCrew;
+                private _obj = create3DENEntity ["Object", _cls, _pos];
+                if (!isNull _obj) then {
+                    private _dir = (_center getDir _pos) + (random 40 - 20);
+                    _obj set3DENAttribute ["rotation", [0, 0, _dir]];
+                    // self-crew at mission start
+                    private _init = format [
+                        "if (isServer) then {private _g = createGroup [%1, true]; private _u = _g createUnit ['%2', getPosATL this, [], 0, 'CAN_COLLIDE']; _u moveInGunner this; _u setSkill %3;};",
+                        _sideText, _gunner, _skill
+                    ];
+                    _obj set3DENAttribute ["init", _init];
+                    _totalStatics = _totalStatics + 1;
+                };
+            };
+        };
+    };
+
+    // =============================================================
+    //  VEHICLE PATROLS — editable empty vehicles, init-crewed
+    // =============================================================
+    if (_nVeh > 0) then {
+        private _facVeh = []; private _sideVeh = [];
+        {
+            private _c = _x; private _cn = configName _c;
+            if (getNumber (_c >> "scope") >= 2
+                && { (_cn isKindOf "Car") || (_cn isKindOf "Tank") }
+                && { !(_cn isKindOf "StaticWeapon") } && { !(_cn isKindOf "ParachuteBase") }) then {
+                if (getText (_c >> "faction") == _faction) then { _facVeh pushBack _cn };
+                if (getNumber (_c >> "side") == _sideNum) then { _sideVeh pushBack _cn };
+            };
+        } forEach ("true" configClasses (configFile >> "CfgVehicles"));
+        private _vehPool = if (count _facVeh > 0) then { _facVeh } else { _sideVeh };
+
+        if (!(_vehPool isEqualTo [])) then {
+            for "_i" from 1 to _nVeh do {
+                private _pos = _center getPos [random _radius, random 360];
+                private _cls = selectRandom _vehPool;
+                private _obj = create3DENEntity ["Object", _cls, _pos];
+                if (!isNull _obj) then {
+                    _obj set3DENAttribute ["rotation", [0, 0, random 360]];
+                    private _init = format [
+                        "if (isServer) then {createVehicleCrew this; {_x setSkill %1} forEach (crew this);};",
+                        _skill
+                    ];
+                    _obj set3DENAttribute ["init", _init];
+                    _totalVehicles = _totalVehicles + 1;
+                };
+            };
+        };
+    };
+
+    // --- consume the module ---
+    delete3DENEntities [_m];
+
+} forEach _mods;
+};
+
+systemChat format ["[GEA] Baked %1 module(s): %2 groups, %3 static turrets, %4 vehicles. Add LAMBS/waypoints as desired.",
+    count _mods, _totalGroups, _totalStatics, _totalVehicles];
+diag_log text format ["[GEA] bake3DEN done — %1 groups, %2 statics, %3 vehicles from %4 module(s).",
+    _totalGroups, _totalStatics, _totalVehicles, count _mods];
