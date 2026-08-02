@@ -23,6 +23,16 @@
 //     13  % Drone               number 0..100
 //     14  % Plane               number 0..100
 //     15  Show AO Marker        bool
+//     16  Simple Pathing        bool     (2 waypoints + cycle for all patrols)
+//     17  Civilian Faction      string   (CfgFactionClasses className, "" = any civ)
+//     18  Patrol Civilians      number   (wandering ambient civs)
+//     19  Garrison Civilians    number   (civs placed inside buildings)
+//     20  Civilian Cars         number   (empty parked civ cars)
+//     21  Minefields            number   (perimeter mine clusters)
+//     22  Show Minefield Markers bool
+//     23  Roadblocks            number   (manned road blocks on the perimeter)
+//     24  Heli Patrol Range     number   (max heli waypoint distance beyond radius)
+//     25  Plane Patrol Range    number   (max jet/plane waypoint distance beyond radius)
 //
 //   NOTE: this positional order is shared by the ZEN dialog
 //   (fn_openConfigDialog) AND the Eden editor module (fn_moduleInit).
@@ -58,7 +68,17 @@ _values params [
     ["_airPctJet",      20],
     ["_airPctDrone",    10],
     ["_airPctPlane",    10],
-    ["_showMarker",     true]
+    ["_showMarker",     true],
+    ["_simplePathing",  false],
+    ["_civFaction",     ""],
+    ["_civPatrol",      0],
+    ["_civGarrison",    0],
+    ["_civCars",        0],
+    ["_mineFields",     0],
+    ["_showMineMarkers", false],
+    ["_roadblocks",     0],
+    ["_heliRange",      1000],
+    ["_planeRange",     2000]
 ];
 
 // Round all count-like fields so float slider drift can't cause
@@ -69,6 +89,13 @@ _garrisonGroups = round _garrisonGroups;
 _staticTurrets  = round _staticTurrets;
 _vehiclePatrols = round _vehiclePatrols;
 _airPatrols     = round _airPatrols;
+_civPatrol      = round _civPatrol;
+_civGarrison    = round _civGarrison;
+_civCars        = round _civCars;
+_mineFields     = round _mineFields;
+_roadblocks     = round _roadblocks;
+_heliRange      = round _heliRange;
+_planeRange     = round _planeRange;
 
 _vehPctCar   = round _vehPctCar;
 _vehPctApc   = round _vehPctApc;
@@ -95,9 +122,20 @@ private _cfg = createHashMapFromArray [
     ["airPatrols",      _airPatrols],
     ["airPct",          [_airPctHeli, _airPctJet, _airPctDrone, _airPctPlane]],  // [heli, jet, drone, plane]
     ["showMarker",      _showMarker],
+    ["simplePathing",   _simplePathing],
+    ["civFaction",      _civFaction],
+    ["civPatrol",       _civPatrol],
+    ["civGarrison",     _civGarrison],
+    ["civCars",         _civCars],
+    ["mineFields",      _mineFields],
+    ["showMineMarkers", _showMineMarkers],
+    ["roadblocks",      _roadblocks],
+    ["heliRange",       _heliRange],
+    ["planeRange",      _planeRange],
     ["entities",        []],             // populated by spawners, drained by cleanup
     ["markers",         []],             // marker names for cleanup
-    ["vehicleSpawns",   []]              // spawn positions for spacing checks
+    ["vehicleSpawns",   []],             // spawn positions for spacing checks
+    ["obstacles",       []]              // shared [pos,radius] footprints — prevents overlap
 ];
 
 _cfg

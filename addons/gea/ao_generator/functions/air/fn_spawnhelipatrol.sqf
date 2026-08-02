@@ -85,9 +85,13 @@ private _class = selectRandom _pool;
 [format ["picked %1", _class]] call _say;
 
 // ---------------------------------------------------------------------
-// Spawn outside the AO at altitude.
+// Spawn outside the AO at altitude. The patrol's reach is capped by the
+// "Heli Patrol Range" setting (max distance BEYOND the AO radius); the
+// default (1000) preserves the original hardcoded behaviour.
 // ---------------------------------------------------------------------
-private _spawnDist = _radius + 800;
+private _range    = _aoConfig getOrDefault ["heliRange", 1000];
+private _maxDist  = _radius + _range;
+private _spawnDist = ((_radius + 800) min _maxDist) max (_radius + 300);
 private _spawnPos  = _center getPos [_spawnDist, random 360];
 _spawnPos set [2, 150];
 
@@ -121,11 +125,13 @@ while {count (waypoints _crewGroup) > 0} do {
     deleteWaypoint ((waypoints _crewGroup) select 0);
 };
 
-private _wpCount = 5 + (floor random 3);  // 5..7
+// "Simple Pathing" clamps the orbit to 2 waypoints for cheaper AI cost.
+private _simple = _aoConfig getOrDefault ["simplePathing", false];
+private _wpCount = if (_simple) then { 2 } else { 5 + (floor random 3) };  // 5..7
 private _wpPositions = [];
 for "_i" from 1 to _wpCount do {
     private _angle = random 360;
-    private _dist  = _radius + 500 + (random 500);
+    private _dist  = (_radius + 500 + (random 500)) min _maxDist;
     _wpPositions pushBack (_center getPos [_dist, _angle]);
 };
 

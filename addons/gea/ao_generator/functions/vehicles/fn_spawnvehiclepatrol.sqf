@@ -187,7 +187,8 @@ private _minSpacing = 30;
 private _spawnPos   = [];
 private _spawnDir   = random 360;
 
-private _prior = _aoConfig getOrDefault ["vehicleSpawns", []];
+private _prior     = _aoConfig getOrDefault ["vehicleSpawns", []];
+private _obstacles = _aoConfig getOrDefault ["obstacles", []];   // shared registry
 
 private _isClear = {
     params ["_p"];
@@ -199,7 +200,9 @@ private _isClear = {
     {
         if ((_p distance2D _x) < _minSpacing) exitWith { _tooClose = true };
     } forEach _prior;
-    !_tooClose
+    if (_tooClose) exitWith { false };
+    // Don't spawn on top of any other placed object (roadblock, car, static).
+    (_obstacles findIf { (_p distance2D (_x select 0)) < ((_x select 1) + _clearance) }) < 0
 };
 
 private _roads = (_center nearRoads _radius) call BIS_fnc_arrayShuffle;
@@ -228,6 +231,9 @@ if (_spawnPos isEqualTo []) exitWith {
 
 _prior pushBack _spawnPos;
 _aoConfig set ["vehicleSpawns", _prior];
+// Reserve footprint in the shared registry so cars/roadblocks avoid it.
+_obstacles pushBack [_spawnPos, _clearance];
+_aoConfig set ["obstacles", _obstacles];
 
 // ---------------------------------------------------------------------
 // Create vehicle + crew.
@@ -282,7 +288,9 @@ if (_capacity >= 4) then {
 _crewGroup setBehaviour "AWARE";
 _crewGroup setCombatMode "RED";
 _crewGroup setSpeedMode "LIMITED";
-[_crewGroup, _center, _radius] call BIS_fnc_taskPatrol;
+// "Simple Pathing" swaps the dynamic patrol for a cheap 2-wp + cycle.
+private _simple = _aoConfig getOrDefault ["simplePathing", false];
+[_crewGroup, _center, _radius, _simple] call GEA_fnc_assignPatrol;
 
 if (!isNull _cargoGroup) then {
     _cargoGroup setBehaviour "AWARE";

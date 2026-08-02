@@ -311,7 +311,14 @@ class CfgPatches
 		{
 			"PHEN_ModuleGarageInit",
 			"FOD_ZA_ModuleSpawnAIGroup",
-			"FOD_ZA_ModuleDefenseOP"
+			"FOD_ZA_ModuleDefenseOP",
+			"FOD_ZA_ModuleGarrisonVanilla",
+			"FOD_ZA_ModuleTacticalPush",
+			"FOD_ZA_ModuleMobilizeQRF",
+			"FOD_ZA_ModuleSupportVehicle",
+			"FOD_ZA_ModuleReserveQRF",
+			"FOD_ZA_ModuleHitAndRun",
+			"FOD_ZA_ModuleSetupAmbush"
 		};
 		weapons[]={};
 	};
@@ -375,6 +382,73 @@ class CfgFunctions
 			class ModuleDefenseOP
 			{
 			};
+		};
+		class GarrisonVanilla
+		{
+			file="\FOD_ZA\functions";
+			class ModuleGarrisonVanilla
+			{
+			};
+		};
+		class TacticalPush
+		{
+			file="\FOD_ZA\functions";
+			class ModuleTacticalPush
+			{
+			};
+		};
+		class MobilizeQRF
+		{
+			file="\FOD_ZA\functions";
+			class ModuleMobilizeQRF
+			{
+			};
+		};
+		class SupportVehicle
+		{
+			file="\FOD_ZA\functions";
+			class ModuleSupportVehicle
+			{
+			};
+		};
+		class ReserveQRF
+		{
+			file="\FOD_ZA\functions";
+			class ModuleReserveQRF
+			{
+			};
+		};
+		class HitAndRun
+		{
+			file="\FOD_ZA\functions";
+			class ModuleHitAndRun
+			{
+			};
+		};
+		class SetupAmbush
+		{
+			file="\FOD_ZA\functions";
+			class ModuleSetupAmbush
+			{
+			};
+		};
+	};
+};
+class CfgRemoteExec
+{
+	class Functions
+	{
+		class FOD_ZA_fnc_taskTacticalPushToggle
+		{
+			allowedTargets=2;
+		};
+		class FOD_ZA_fnc_taskSupportVehicleToggle
+		{
+			allowedTargets=2;
+		};
+		class FOD_ZA_fnc_curatorFeedbackShow
+		{
+			allowedTargets=2;
 		};
 	};
 };
@@ -3297,6 +3371,16 @@ class CfgVehicles
 						name="[VANILLA] Garrison";
 						value="vanillagarrison";
 					};
+					class VanTacticalPush
+					{
+						name="[VANILLA] Tactical Push";
+						value="tacticalpush";
+					};
+					class VanMobilizeQRF
+					{
+						name="[VANILLA] Mobilize QRF";
+						value="mobilizeqrf";
+					};
 					class Random
 					{
 						name="Random";
@@ -3326,6 +3410,15 @@ class CfgVehicles
 				tooltip="Note: Task Rush, Hunt, Creep, Reserve/QRF and Hit & Run ONLY react to player enemies, not AI when this is enabled.";
 				typeName="BOOL";
 				defaultValue="false";
+			};
+			class SPG_LoS: Checkbox
+			{
+				property="FOD_ZA_SPG_LoS";
+				expression="_this setVariable ['FOD_ZA_SPG_LoS', _value, true];";
+				displayName="Line of Sight Check";
+				tooltip="Spawn the group at the nearest spot inside the area with no enemy line of sight, searching from the centre outwards. Falls back to the module centre if every spot is exposed.";
+				typeName="BOOL";
+				defaultValue="true";
 			};
 			class ModuleDescription: ModuleDescription
 			{
@@ -3701,9 +3794,549 @@ class CfgVehicles
 			};
 		};
 	};
+	class FOD_ZA_ModuleGarrisonVanilla: Module_F
+	{
+		scope=2;
+		displayName="Garrison Area (Vanilla)";
+		author="Phenosi";
+		category="FOD_ZA_Modules";
+		icon="a3\ui_f\data\gui\cfg\communicationmenu\defend_ca.paa";
+		picture="a3\ui_f\data\gui\cfg\communicationmenu\defend_ca.paa";
+		function="FOD_ZA_fnc_ModuleGarrisonVanilla";
+		functionPriority=1;
+		isGlobal=0;
+		isTriggerActivated=1;
+		isDisposable=1;
+		is3DEN=1;
+		curatorCanAttach=0;
+		canSetArea=1;
+		canSetAreaShape=1;
+		class AttributeValues
+		{
+			size3[]={100,100,-1};
+			isRectangle=0;
+		};
+		class Attributes: AttributesBase
+		{
+			class MGV_SortByHeight: Checkbox
+			{
+				property="FOD_ZA_MGV_SortByHeight";
+				expression="_this setVariable ['FOD_ZA_MGV_SortByHeight', _value, true];";
+				displayName="Sort Positions by Height";
+				tooltip="Assign building positions from highest floor down. Puts units on upper floors first.";
+				typeName="BOOL";
+				defaultValue="false";
+			};
+			class MGV_Patrol: Checkbox
+			{
+				property="FOD_ZA_MGV_Patrol";
+				expression="_this setVariable ['FOD_ZA_MGV_Patrol', _value, true];";
+				displayName="Patrol Element";
+				tooltip="Split a small element (1-4 units) from the garrison to patrol the area. The rest hold position.";
+				typeName="BOOL";
+				defaultValue="false";
+			};
+			class ModuleDescription: ModuleDescription
+			{
+			};
+		};
+		class ModuleDescription: ModuleDescription
+		{
+			description[]=
+			{
+				"Garrisons synced AI units into nearby building positions. No LAMBS required.",
+				"STEP 1: Sync AI units or groups to this module.",
+				"STEP 2: Resize the area circle to set the building search radius.",
+				"Garrisoned units hold position until hit 3 times or suppressed by an enemy within 10-150 m.",
+				"Sort by Height: fills upper floors first.",
+				"Patrol Element: a small sub-element patrols the area while the rest hold."
+			};
+		};
+	};
+	class FOD_ZA_ModuleReserveQRF: Module_F
+	{
+		scope=2;
+		displayName="Task Reserve/QRF";
+		author="Phenosi";
+		category="FOD_ZA_Modules";
+		icon="\FOD_ZA\pictures\FOD_ZA_ReserveQRF_icon.paa";
+		picture="\FOD_ZA\pictures\FOD_ZA_ReserveQRF_icon.paa";
+		function="FOD_ZA_fnc_ModuleReserveQRF";
+		functionPriority=1;
+		isGlobal=0;
+		isTriggerActivated=1;
+		isDisposable=1;
+		is3DEN=1;
+		curatorCanAttach=0;
+		canSetArea=1;
+		canSetAreaShape=1;
+		class AttributeValues
+		{
+			size3[]={150,150,-1};
+			isRectangle=0;
+		};
+		class Attributes: AttributesBase
+		{
+			class RQ_PlayersOnly: Checkbox
+			{
+				property="FOD_ZA_RQ_PlayersOnly";
+				expression="_this setVariable ['FOD_ZA_RQ_PlayersOnly', _value, true];";
+				displayName="Players Only";
+				tooltip="Only react to and rush toward player-controlled enemies.";
+				typeName="BOOL";
+				defaultValue="false";
+			};
+			class ModuleDescription: ModuleDescription
+			{
+			};
+		};
+		class ModuleDescription: ModuleDescription
+		{
+			description[]=
+			{
+				"Holds synced AI groups in place until enemies are detected nearby, then rushes to assist.",
+				"Uses LAMBS Waypoints for advanced tactics when available, otherwise falls back to a vanilla camp/rush implementation.",
+				"STEP 1: Sync AI units or groups to this module.",
+				"STEP 2: Resize the area circle to set the detection/rush radius.",
+				"Players Only: only react to and target player-controlled enemies."
+			};
+		};
+	};
+	class FOD_ZA_ModuleHitAndRun: Module_F
+	{
+		scope=2;
+		displayName="Task Hit & Run";
+		author="Phenosi";
+		category="FOD_ZA_Modules";
+		icon="a3\ui_f\data\igui\cfg\simpletasks\types\run_ca.paa";
+		picture="a3\ui_f\data\igui\cfg\simpletasks\types\run_ca.paa";
+		function="FOD_ZA_fnc_ModuleHitAndRun";
+		functionPriority=1;
+		isGlobal=0;
+		isTriggerActivated=1;
+		isDisposable=1;
+		is3DEN=1;
+		curatorCanAttach=0;
+		canSetArea=1;
+		canSetAreaShape=1;
+		class AttributeValues
+		{
+			size3[]={200,200,-1};
+			isRectangle=0;
+		};
+		class Attributes: AttributesBase
+		{
+			class HR_PlayersOnly: Checkbox
+			{
+				property="FOD_ZA_HR_PlayersOnly";
+				expression="_this setVariable ['FOD_ZA_HR_PlayersOnly', _value, true];";
+				displayName="Players Only";
+				tooltip="Only react to and engage player-controlled enemies.";
+				typeName="BOOL";
+				defaultValue="false";
+			};
+			class ModuleDescription: ModuleDescription
+			{
+			};
+		};
+		class ModuleDescription: ModuleDescription
+		{
+			description[]=
+			{
+				"Sends synced AI groups to hunt the nearest enemy, engage briefly, then break contact and pull back, repeating.",
+				"Uses LAMBS Waypoints for advanced tactics when available, otherwise falls back to a vanilla hunt/retreat implementation.",
+				"STEP 1: Sync AI units or groups to this module.",
+				"STEP 2: Resize the area circle to set the engagement radius.",
+				"Players Only: only react to and target player-controlled enemies."
+			};
+		};
+	};
+	class FOD_ZA_ModuleSetupAmbush: Module_F
+	{
+		scope=2;
+		displayName="Task Setup Ambush";
+		author="Phenosi";
+		category="FOD_ZA_Modules";
+		icon="a3\ui_f\data\gui\cfg\hints\tactical_view_ca.paa";
+		picture="a3\ui_f\data\gui\cfg\hints\tactical_view_ca.paa";
+		function="FOD_ZA_fnc_ModuleSetupAmbush";
+		functionPriority=1;
+		isGlobal=0;
+		isTriggerActivated=1;
+		isDisposable=1;
+		is3DEN=1;
+		curatorCanAttach=0;
+		canSetArea=1;
+		canSetAreaShape=1;
+		class AttributeValues
+		{
+			size3[]={100,100,-1};
+			isRectangle=0;
+		};
+		class Attributes: AttributesBase
+		{
+			class SA_CoverType: Combo
+			{
+				property="FOD_ZA_SA_CoverType";
+				expression="_this setVariable ['FOD_ZA_SA_CoverType', _value, true];";
+				displayName="Cover Type";
+				tooltip="What units should use as cover while in ambush.";
+				typeName="NUMBER";
+				defaultValue="0";
+				class Values
+				{
+					class All
+					{
+						name="All (Buildings, Walls, Vegetation)";
+						value=0;
+					};
+					class Buildings
+					{
+						name="Buildings Only";
+						value=1;
+					};
+					class Walls
+					{
+						name="Walls / Fortifications Only";
+						value=2;
+					};
+					class Vegetation
+					{
+						name="Vegetation Only";
+						value=3;
+					};
+					class BuildingsVegetation
+					{
+						name="Buildings + Vegetation";
+						value=4;
+					};
+					class BuildingsWalls
+					{
+						name="Buildings + Walls";
+						value=5;
+					};
+					class WallsVegetation
+					{
+						name="Walls + Vegetation";
+						value=6;
+					};
+				};
+			};
+			class SA_Patrol: Checkbox
+			{
+				property="FOD_ZA_SA_Patrol";
+				expression="_this setVariable ['FOD_ZA_SA_Patrol', _value, true];";
+				displayName="Patrol";
+				tooltip="Split a small element to patrol the area while the rest hold the ambush.";
+				typeName="BOOL";
+				defaultValue="false";
+			};
+			class ModuleDescription: ModuleDescription
+			{
+			};
+		};
+		class ModuleDescription: ModuleDescription
+		{
+			description[]=
+			{
+				"Moves synced AI groups into cover and holds them silent until contact (ambush).",
+				"Uses LAMBS Waypoints for advanced tactics when available, otherwise falls back to a vanilla cover/patrol implementation.",
+				"STEP 1: Sync AI units or groups to this module.",
+				"STEP 2: Resize the area circle to set the ambush search radius.",
+				"Cover Type: what units should use as cover while waiting.",
+				"Patrol: a small sub-element patrols the area while the rest hold the ambush."
+			};
+		};
+	};
+	class FOD_ZA_ModuleTacticalPush: Module_F
+	{
+		scope=2;
+		displayName="Task Tactical Push";
+		author="Phenosi";
+		category="FOD_ZA_Modules";
+		icon="\FOD_ZA\pictures\FOD_ZA_TacPush_icon";
+		picture="\FOD_ZA\pictures\FOD_ZA_TacPush_icon";
+		function="FOD_ZA_fnc_ModuleTacticalPush";
+		functionPriority=1;
+		isGlobal=0;
+		isTriggerActivated=1;
+		isDisposable=1;
+		is3DEN=1;
+		curatorCanAttach=0;
+		canSetArea=1;
+		canSetAreaShape=1;
+		class AttributeValues
+		{
+			size3[]={25,25,-1};
+			isRectangle=0;
+		};
+		class Attributes: AttributesBase
+		{
+			class TP_BoundDistance: Edit
+			{
+				property="FOD_ZA_TP_BoundDistance";
+				expression="_this setVariable ['FOD_ZA_TP_BoundDistance', _value, true];";
+				displayName="Bound Distance";
+				tooltip="Distance (m) covered in each push bound before stopping to check for cover or targets.";
+				typeName="NUMBER";
+				defaultValue="40";
+			};
+			class TP_PlayersOnly: Checkbox
+			{
+				property="FOD_ZA_TP_PlayersOnly";
+				expression="_this setVariable ['FOD_ZA_TP_PlayersOnly', _value, true];";
+				displayName="Players Only";
+				tooltip="Only react to and engage player-controlled enemies.";
+				typeName="BOOL";
+				defaultValue="false";
+			};
+			class ModuleDescription: ModuleDescription
+			{
+			};
+		};
+		class ModuleDescription: ModuleDescription
+		{
+			description[]=
+			{
+				"Pushes synced AI groups toward the module position. No LAMBS required.",
+				"STEP 1: Sync AI units or groups to this module.",
+				"STEP 2: Resize the area circle to set the arrival radius.",
+				"Groups sprint toward the module in short bounds (AWARE, FULL speed, standing).",
+				"When a group takes fire, it breaks to the nearest cover (or goes prone if none is found within 100 m), returns fire based on each unit's weapon, then resumes the push.",
+				"Mounted groups drive toward the module and dismount automatically once close enough.",
+				"On arrival, if enemies remain nearby the group clears them before standing down.",
+				"Bound Distance: length of each push bound in meters.",
+				"Players Only: only react to and target player-controlled enemies."
+			};
+		};
+	};
+	class FOD_ZA_ModuleMobilizeQRF: Module_F
+	{
+		scope=2;
+		displayName="Task Mobilize QRF";
+		author="Phenosi";
+		category="FOD_ZA_Modules";
+		icon="a3\soft_f_beta\truck_02\data\ui\truck_02_covered_ca.paa";
+		picture="a3\soft_f_beta\truck_02\data\ui\truck_02_covered_ca.paa";
+		function="FOD_ZA_fnc_ModuleMobilizeQRF";
+		functionPriority=1;
+		isGlobal=0;
+		isTriggerActivated=1;
+		isDisposable=1;
+		is3DEN=1;
+		curatorCanAttach=0;
+		canSetArea=1;
+		canSetAreaShape=1;
+		class AttributeValues
+		{
+			size3[]={30,30,-1};
+			isRectangle=0;
+		};
+		class Attributes: AttributesBase
+		{
+			class ModuleDescription: ModuleDescription
+			{
+			};
+		};
+		class ModuleDescription: ModuleDescription
+		{
+			description[]=
+			{
+				"Mounts synced AI groups into their nearby transport and rushes them to the nearest allied group in need. No LAMBS required.",
+				"STEP 1: Sync AI units or groups (with their transport vehicle) to this module.",
+				"STEP 2: Resize the area circle to set the arrival radius near the target ally.",
+				"Units who don't fit in the available transport are left behind and removed.",
+				"Ground transport drives in, helicopters land and unload, and fixed-wing transport paradrops the troops.",
+				"On arrival, vehicle crew splits off as their own group and the dismounted troops take cover, then push the objective; an armed ground transport stays on as a Support Vehicle."
+			};
+		};
+	};
+	class FOD_ZA_ModuleSupportVehicle: Module_F
+	{
+		scope=2;
+		displayName="Task Support Vehicle";
+		author="Phenosi";
+		category="FOD_ZA_Modules";
+		icon="\FOD_ZA\pictures\FOD_ZA_SupportVic.paa";
+		picture="\FOD_ZA\pictures\FOD_ZA_SupportVic.paa";
+		function="FOD_ZA_fnc_ModuleSupportVehicle";
+		functionPriority=1;
+		isGlobal=0;
+		isTriggerActivated=1;
+		isDisposable=1;
+		is3DEN=1;
+		curatorCanAttach=0;
+		canSetArea=1;
+		canSetAreaShape=1;
+		class AttributeValues
+		{
+			size3[]={50,50,-1};
+			isRectangle=0;
+		};
+		class Attributes: AttributesBase
+		{
+			class SV_FollowDistance: Edit
+			{
+				property="FOD_ZA_SV_FollowDistance";
+				expression="_this setVariable ['FOD_ZA_SV_FollowDistance', _value, true];";
+				displayName="Follow Distance";
+				tooltip="How far behind the supported allied group the vehicle stays.";
+				typeName="NUMBER";
+				defaultValue="50";
+			};
+			class ModuleDescription: ModuleDescription
+			{
+			};
+		};
+		class ModuleDescription: ModuleDescription
+		{
+			description[]=
+			{
+				"Sends a synced vehicle group to the nearest allied group in need, then has it follow and support that group from a distance, never overtaking it. No LAMBS required.",
+				"Ground vehicles trail and suppress from behind; aircraft loiter overhead and switch to a search-and-destroy pass when an enemy is near.",
+				"STEP 1: Sync a vehicle's group to this module.",
+				"STEP 2: Resize the area circle to set the search radius for an allied group in need.",
+				"Follow Distance: how far behind the supported group the vehicle stays.",
+				"The vehicle never disembarks; if it is destroyed or immobilised, control is returned to normal AI."
+			};
+		};
+	};
+};
+class CfgWaypoints
+{
+	class FOD_ZA_Tasks
+	{
+		displayName="[FOD] Zeus Additions";
+		class FOD_ZA_TacticalPush
+		{
+			displayName="Task Tactical Push";
+			file="\FOD_ZA\scripts\fod_wpTacticalPush.sqf";
+			icon="\FOD_ZA\pictures\FOD_ZA_TacPush_icon.paa";
+			tooltip="Group bounds toward the waypoint, taking cover and returning fire when shot at.";
+		};
+		class FOD_ZA_MobilizeQRF
+		{
+			displayName="Task Mobilize QRF";
+			file="\FOD_ZA\scripts\fod_wpMobilizeQRF.sqf";
+			icon="\a3\soft_f_beta\truck_02\data\ui\truck_02_covered_ca.paa";
+			tooltip="Group mounts its transport and rushes to the waypoint, dismounting on arrival.";
+		};
+		class FOD_ZA_SupportVehicle
+		{
+			displayName="Task Support Vehicle";
+			file="\FOD_ZA\scripts\fod_wpSupportVehicle.sqf";
+			icon="\FOD_ZA\pictures\FOD_ZA_SupportVic.paa";
+			tooltip="Vehicle anchors onto the nearest allied group near the waypoint and supports it from a distance.";
+		};
+		class FOD_ZA_Ambush
+		{
+			displayName="Task Setup Ambush";
+			file="\FOD_ZA\scripts\fod_wpAmbush.sqf";
+			icon="\FOD_ZA\pictures\FOD_ZA_SetupAmbush_icon.paa";
+			tooltip="Group moves into cover near the waypoint and holds silent until contact.";
+		};
+		class FOD_ZA_Reserve
+		{
+			displayName="Task Reserve/QRF";
+			file="\FOD_ZA\scripts\fod_wpReserve.sqf";
+			icon="\FOD_ZA\pictures\FOD_ZA_ReserveQRF_icon.paa";
+			tooltip="Group holds at the waypoint until enemy contact, then rushes to engage.";
+		};
+		class FOD_ZA_HitAndRun
+		{
+			displayName="Task Hit & Run";
+			file="\FOD_ZA\scripts\fod_wpHitAndRun.sqf";
+			icon="\a3\ui_f\data\igui\cfg\simpletasks\types\run_ca.paa";
+			tooltip="Group engages near the waypoint, breaks contact, retreats, and repeats.";
+		};
+	};
+};
+class ZEN_WaypointTypes
+{
+	class fod_za_TacticalPush
+	{
+		displayName="Tactical Push";
+		type="SCRIPTED";
+		script="\FOD_ZA\scripts\fod_wpTacticalPush.sqf";
+	};
+	class fod_za_MobilizeQRF
+	{
+		displayName="Mobilize QRF";
+		type="SCRIPTED";
+		script="\FOD_ZA\scripts\fod_wpMobilizeQRF.sqf";
+	};
+	class fod_za_SupportVehicle
+	{
+		displayName="Support Vehicle";
+		type="SCRIPTED";
+		script="\FOD_ZA\scripts\fod_wpSupportVehicle.sqf";
+	};
+	class fod_za_Ambush
+	{
+		displayName="Setup Ambush";
+		type="SCRIPTED";
+		script="\FOD_ZA\scripts\fod_wpAmbush.sqf";
+	};
+	class fod_za_Reserve
+	{
+		displayName="Reserve/QRF";
+		type="SCRIPTED";
+		script="\FOD_ZA\scripts\fod_wpReserve.sqf";
+	};
+	class fod_za_HitAndRun
+	{
+		displayName="Hit & Run";
+		type="SCRIPTED";
+		script="\FOD_ZA\scripts\fod_wpHitAndRun.sqf";
+	};
+};
+class ZEN_context_menu_actions
+{
+	class FOD_ZA_wp
+	{
+		displayName="FOD: ZA Waypoints";
+		priority=2;
+		condition="(_groups isNotEqualTo []) || (_objects isNotEqualTo [])";
+		class A_TacticalPush
+		{
+			displayName="Task Tactical Push";
+			statement="private _allGroups = +_groups; { _allGroups pushBackUnique (group _x); } forEach _objects; { [_x, ([_x, getPosATL (leader _x)] call FOD_ZA_fnc_findNearestEnemyPos), 25, 40] call FOD_ZA_fnc_taskTacticalPushToggle } forEach _allGroups;";
+			icon="\FOD_ZA\pictures\FOD_ZA_TacPush_icon.paa";
+		};
+		class A_MobilizeQRF
+		{
+			displayName="Task Mobilize QRF";
+			statement="private _allGroups = +_groups; { _allGroups pushBackUnique (group _x); } forEach _objects; { private _targetInfo = [_x, getPosATL (leader _x)] call FOD_ZA_fnc_findNearestAllyPos; [_x, (_targetInfo select 0), 30, (_targetInfo select 1), true] spawn FOD_ZA_fnc_taskMobilizeQRF } forEach _allGroups;";
+			icon="a3\data_f_tacops\images\achtobeyondhope.jpg";
+		};
+		class A_SupportVehicle
+		{
+			displayName="Task Support Vehicle";
+			statement="private _allGroups = +_groups; { _allGroups pushBackUnique (group _x); } forEach _objects; { [_x, ([_x, getPosATL (leader _x)] call FOD_ZA_fnc_findNearestAllyPos) select 0, 50] call FOD_ZA_fnc_taskSupportVehicleToggle } forEach _allGroups;";
+			icon="a3\data_f_tacops\images\achtolifeline.jpg";
+		};
+		class A_SetupAmbush
+		{
+			displayName="Task Setup Ambush";
+			statement="private _allGroups = +_groups; { _allGroups pushBackUnique (group _x); } forEach _objects; { [_x, _position, 100, [], false, 0, true, false] spawn FOD_ZA_fnc_taskEntrench } forEach _allGroups;";
+			icon="a3\ui_f\data\gui\cfg\hints\tactical_view_ca.paa";
+		};
+		class A_HitAndRun
+		{
+			displayName="Task Hit & Run";
+			statement="private _allGroups = +_groups; { _allGroups pushBackUnique (group _x); } forEach _objects; { [_x, _position, 200] spawn FOD_ZA_fnc_taskHitAndRun } forEach _allGroups;";
+			icon="a3\ui_f\data\igui\cfg\simpletasks\types\run_ca.paa";
+		};
+		class A_Reserve
+		{
+			displayName="Task Reserve/QRF";
+			statement="private _allGroups = +_groups; { _allGroups pushBackUnique (group _x); } forEach _objects; { [_x, 100] spawn FOD_ZA_fnc_taskReserve } forEach _allGroups;";
+			icon="\FOD_ZA\pictures\FOD_ZA_ReserveQRF_icon.paa";
+		};
+	};
 };
 class cfgMods
 {
 	author="Phenosi";
-	timepacked="1775756665";
+	timepacked="1782394871";
 };

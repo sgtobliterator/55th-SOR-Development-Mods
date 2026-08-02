@@ -1199,7 +1199,7 @@ fnc_Garage_CreateVehicle = {
 
 	_fullCrewParams = fullCrew _veh;
 
-	_special = "CAN_COLLIDE";
+	_special = "NONE";
 	_movein = false;
 	switch (missionNamespace getVariable "Garage_SpawnType") do {
 		case 1 : {
@@ -1226,12 +1226,12 @@ fnc_Garage_CreateVehicle = {
 	sleep 0.1;
 
 	_veh = createVehicle [_typeVeh, _point, [], 0, _special];
+	if (FOD_ZA_spawnProtectDuration > 0) then { [_veh, FOD_ZA_spawnProtectDuration] call FOD_ZA_fnc_vehicleSpawnProtect; };
 	if (_special != "FLY") then
 	{
 		_veh setPosASL ((getPosASL _point) vectorAdd [0,0,0.5]);
 	};
 	_veh setDir (getDir _point);
-
 	{
 		_veh animate [_x,_animationValues select _forEachIndex,true];
 	} forEach _animationNames;

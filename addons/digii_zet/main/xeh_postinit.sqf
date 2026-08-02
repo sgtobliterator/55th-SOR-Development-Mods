@@ -2,15 +2,23 @@
 
 // Add eventhanlder
 [QGVAR(setFilter), {
-    params ["_unit"];
-    
+    params ["_unit", ["_filter", "", [""]]];
+
     private _grp = group _unit;
-    private _filter = _grp getVariable ["targetFilterType", "ALL"];
+
+    // A non-empty _filter = caller picked a new type (Zeus combo / context menu);
+    // persist it as the group's active filter. Arg-less callers (custom-filter
+    // checkboxes, override, range slider) leave targetFilterType untouched.
+    if (_filter != "") then {
+        _grp setVariable ["targetFilterType", toUpper _filter, true];
+    };
+
+    private _filterType = _grp getVariable ["targetFilterType", "ALL"];
     private _cf = _grp getVariable [QGVAR(customFilter), createHashMap];
     private _override = _grp getVariable [QGVAR(overrideMaxEngageRange), false];
     private _maxRange = _grp getVariable [QGVAR(maxEngageRange), 10000];
 
-    [_unit, _filter, _cf, _override, _maxRange] call FUNC(setTargetFilter);
+    [_unit, _filterType, _cf, _override, _maxRange] call FUNC(setTargetFilter);
 }] call CBA_fnc_addEventHandler;
 
 if (!hasInterface) exitWith {};
@@ -54,17 +62,17 @@ private _parentPath = [_parentAction] call zen_context_menu_fnc_addAction;
 
             // Apply to hovered entity
             if (typeName _hoveredEntity == "OBJECT" && {!isNull _hoveredEntity}) then {
-                [QGVAR(setFilter), [_hoveredEntity], _hoveredEntity] call CBA_fnc_targetEvent;
+                [QGVAR(setFilter), [_hoveredEntity, _args], _hoveredEntity] call CBA_fnc_targetEvent;
             };
 
             if (typeName _hoveredEntity == "GROUP" && {!isNull _hoveredEntity}) then {
-                [QGVAR(setFilter), [leader _hoveredEntity], _hoveredEntity] call CBA_fnc_targetEvent;
+                [QGVAR(setFilter), [leader _hoveredEntity, _args], _hoveredEntity] call CBA_fnc_targetEvent;
             };
 
             // Apply to all selected objects (skip hoveredEntity to avoid duplicate)
             {
                 if (_x isNotEqualTo _hoveredEntity) then {
-                    [QGVAR(setFilter), [_x], _x] call CBA_fnc_targetEvent;
+                    [QGVAR(setFilter), [_x, _args], _x] call CBA_fnc_targetEvent;
                 };
             } forEach _objects;
         },

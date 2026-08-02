@@ -134,6 +134,7 @@ private _class = selectRandom _pool;
 private _clearance  = ((sizeOf _class) max 3) + 1;
 private _minSpacing = 20;
 private _prior      = _aoConfig getOrDefault ["staticSpawns", []];
+private _obstacles  = _aoConfig getOrDefault ["obstacles", []];   // shared registry
 
 private _isClear = {
     params ["_p"];
@@ -145,7 +146,9 @@ private _isClear = {
     {
         if ((_p distance2D _x) < _minSpacing) exitWith { _tooClose = true };
     } forEach _prior;
-    !_tooClose
+    if (_tooClose) exitWith { false };
+    // Don't sit on top of another placed object (vehicle, car, roadblock).
+    (_obstacles findIf { (_p distance2D (_x select 0)) < ((_x select 1) + _clearance) }) < 0
 };
 
 private _spawnPos = [];
@@ -163,6 +166,9 @@ if (_spawnPos isEqualTo []) exitWith {
 
 _prior pushBack _spawnPos;
 _aoConfig set ["staticSpawns", _prior];
+// Reserve footprint in the shared registry so other placements avoid it.
+_obstacles pushBack [_spawnPos, _clearance];
+_aoConfig set ["obstacles", _obstacles];
 
 // ---------------------------------------------------------------------
 // Create the static and face it OUTWARD from the AO centre. A small

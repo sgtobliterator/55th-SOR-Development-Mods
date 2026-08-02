@@ -17,6 +17,7 @@ private _sideStr       = _module getVariable ["FOD_ZA_SPG_Side", "EAST"];
 private _taskKey       = _module getVariable ["FOD_ZA_SPG_LambsTask", "patrol"];
 private _skill         = _module getVariable ["FOD_ZA_SPG_Skill", 0.85];
 private _playersOnly   = _module getVariable ["FOD_ZA_SPG_PlayersOnly", false];
+private _losSpawn      = _module getVariable ["FOD_ZA_SPG_LoS", true];
 
 private _area = _module getVariable ["ObjectArea", [200, 200, 0, false, -1]];
 if (is3DEN) then {
@@ -30,7 +31,7 @@ switch (_mode) do {
 	case "init": {
 		if (_isActivated && isServer) then {
 			private _hasLambs    = isClass (configFile >> "CfgPatches" >> "lambs_wp");
-			private _vanillaTasks = ["notask", "sentry", "guard", "seekanddestroy", "vanillagarrison"];
+			private _vanillaTasks = ["notask", "sentry", "guard", "seekanddestroy", "vanillagarrison", "tacticalpush", "mobilizeqrf"];
 			private _cbaTasks     = ["cbaattack", "cbadefend", "cbapatrol", "cbasearch"];
 			private _noLambsRequired = _vanillaTasks + _cbaTasks;
 			private _taskKeyLower = toLower _taskKey;
@@ -38,8 +39,8 @@ switch (_mode) do {
 				["[FOD_ZA_ModuleSpawnAIGroup] ERROR: LAMBS Waypoints required but not detected. Use a vanilla task, CBA task, or No Task."] call FOD_ZA_fnc_debugMessage;
 			};
 
-			[_module, _classPool, _factionClass, _cfgGroupClass, _groupSize, _sideStr, _taskKey, _skill, _radius, _playersOnly, _hasLambs, _vanillaTasks, _cbaTasks] spawn {
-				params ["_module", "_classPool", "_factionClass", "_cfgGroupClass", "_groupSize", "_sideStr", "_taskKey", "_skill", "_radius", "_playersOnly", "_hasLambs", "_vanillaTasks", "_cbaTasks"];
+			[_module, _classPool, _factionClass, _cfgGroupClass, _groupSize, _sideStr, _taskKey, _skill, _radius, _playersOnly, _hasLambs, _vanillaTasks, _cbaTasks, _losSpawn] spawn {
+				params ["_module", "_classPool", "_factionClass", "_cfgGroupClass", "_groupSize", "_sideStr", "_taskKey", "_skill", "_radius", "_playersOnly", "_hasLambs", "_vanillaTasks", "_cbaTasks", "_losSpawn"];
 
 				private _spawnPos = getPosATL _module;
 
@@ -56,6 +57,12 @@ switch (_mode) do {
 					case "WEST":        { "West" };
 					case "INDEPENDENT": { "Indep" };
 					default             { "East" };
+				};
+
+				// out-of-LoS spawn, search from the module centre outwards for a spot enemies can't see, keep the centre when none is found
+				if (_losSpawn) then {
+					private _losPos = [_module, _radius, _side] call FOD_ZA_fnc_findLoSSpawnInArea;
+					if !(_losPos isEqualTo [0,0,0]) then { _spawnPos = _losPos; };
 				};
 
 				private _grp = grpNull;
@@ -183,6 +190,11 @@ switch (_mode) do {
 					}],
 					["seekanddestroy", { [_grp, _spawnPos, _radius] call FOD_ZA_fnc_taskSeekAndDestroy }],
 					["vanillagarrison",{ [_grp, _spawnPos, _radius] call FOD_ZA_fnc_taskVanillaGarrison }],
+					["tacticalpush",   { [_grp, ([_grp, _spawnPos] call FOD_ZA_fnc_findNearestEnemyPos), _radius * 0.2, 40, _playersOnly] spawn FOD_ZA_fnc_taskTacticalPush }],
+					["mobilizeqrf",    {
+						private _targetInfo = [_grp, _spawnPos] call FOD_ZA_fnc_findNearestAllyPos;
+						[_grp, (_targetInfo select 0), _radius * 0.2, (_targetInfo select 1), true] spawn FOD_ZA_fnc_taskMobilizeQRF;
+					}],
 					// CBA tasks, CBA is always loaded
 					["cbaattack",      { [_grp, _spawnPos, _radius] call CBA_fnc_taskAttack }],
 					["cbadefend",      { [_grp, _spawnPos, _radius] call CBA_fnc_taskDefend }],
@@ -203,7 +215,7 @@ switch (_mode) do {
 					["hitandrun",      { [_grp, _spawnPos, _radius, _playersOnly] spawn FOD_ZA_fnc_taskHitAndRun                 }]
 				];
 
-				// random pool: non-lambs tasks when LAMBS absent, everything except notask when LAMBS present
+				// random pool, non-lambs tasks when LAMBS absent, everything except notask when LAMBS present
 				private _noLambsRequired = _vanillaTasks + _cbaTasks;
 				private _lambsKeys = if (_hasLambs) then {
 					keys _lambsMap - ["notask"]

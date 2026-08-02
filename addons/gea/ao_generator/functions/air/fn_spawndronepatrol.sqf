@@ -92,12 +92,18 @@ private _class = selectRandom _pool;
 private _cfgEntry = configFile >> "CfgVehicles" >> _class;
 private _isFixedWing = _class isKindOf "Plane";
 
-private _spawnDist   = _radius + 800;
+// Reach capped by the matching patrol-range setting: fixed-wing UAVs use
+// "Plane Patrol Range", rotary drones use "Heli Patrol Range". Defaults
+// preserve the original hardcoded behaviour.
+private _range       = if (_isFixedWing) then { _aoConfig getOrDefault ["planeRange", 2000] } else { _aoConfig getOrDefault ["heliRange", 1000] };
+private _maxDist     = _radius + _range;
+private _spawnDist   = ((_radius + 800) min _maxDist) max (_radius + 300);
 private _spawnAlt    = if (_isFixedWing) then { 250 } else { 100 };
 private _flyHeight   = if (_isFixedWing) then { 220 } else { 90  };
 private _wpDistBase  = if (_isFixedWing) then { _radius + 600 } else { _radius + 250 };
 private _wpDistJit   = if (_isFixedWing) then { 800 } else { 500 };
-private _wpCount     = 5 + (floor random 3);
+private _simple      = _aoConfig getOrDefault ["simplePathing", false];
+private _wpCount     = if (_simple) then { 2 } else { 5 + (floor random 3) };
 
 private _spawnPos    = _center getPos [_spawnDist, random 360];
 _spawnPos set [2, _spawnAlt];
@@ -132,7 +138,7 @@ while {count (waypoints _crewGroup) > 0} do {
 private _wpPositions = [];
 for "_i" from 1 to _wpCount do {
     private _angle = random 360;
-    private _dist  = _wpDistBase + (random _wpDistJit);
+    private _dist  = (_wpDistBase + (random _wpDistJit)) min _maxDist;
     _wpPositions pushBack (_center getPos [_dist, _angle]);
 };
 

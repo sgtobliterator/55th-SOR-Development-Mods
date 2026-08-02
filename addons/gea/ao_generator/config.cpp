@@ -14,9 +14,9 @@ class CfgPatches
 			"cba_main",
 			"zen_main"
 		};
-		version="0.8.0";
-		versionStr="0.8.0";
-		versionAr[]={0,8,0};
+		version="0.9.0";
+		versionStr="0.9.0";
+		versionAr[]={0,9,0};
 	};
 };
 class CfgRemoteExec
@@ -45,6 +45,14 @@ class CfgFunctions
 			class registerZenModule
 			{
 				postInit=1;
+			};
+		};
+		class settings
+		{
+			file="\gea\ao_generator\functions\settings";
+			class cbaSettings
+			{
+				preInit=1;
 			};
 		};
 		class modules
@@ -77,6 +85,33 @@ class CfgFunctions
 			{
 			};
 			class spawnGarrisonGroup
+			{
+			};
+			class assignPatrol
+			{
+			};
+		};
+		class civilians
+		{
+			file="\gea\ao_generator\functions\civilians";
+			class spawnCivilians
+			{
+			};
+			class spawnCivilianCars
+			{
+			};
+		};
+		class mines
+		{
+			file="\gea\ao_generator\functions\mines";
+			class spawnMinefield
+			{
+			};
+		};
+		class roadblocks
+		{
+			file="\gea\ao_generator\functions\roadblocks";
+			class spawnRoadblock
 			{
 			};
 		};
@@ -384,6 +419,96 @@ class CfgVehicles
 				defaultValue="true";
 				expression="_this setVariable ['GEA_showMarker', _value]";
 			};
+			class GEA_simplePathing: Checkbox
+			{
+				property="GEA_simplePathing";
+				displayName="Simple Pathing";
+				tooltip="Performance option. ON = every patrol (infantry, vehicle, air) gets only 2 waypoints + cycle. OFF = rich dynamic BIS patrol (default).";
+				typeName="BOOL";
+				defaultValue="false";
+				expression="_this setVariable ['GEA_simplePathing', _value]";
+			};
+			class GEA_civFaction: Edit
+			{
+				property="GEA_civFaction";
+				displayName="Civilian Faction (classname)";
+				tooltip="CfgFactionClasses civilian classname for civs/cars (e.g. CIV_F, CIV_IDAP_F). Leave blank to use any civilian-side units.";
+				typeName="STRING";
+				defaultValue="''";
+				expression="_this setVariable ['GEA_civFaction', _value]";
+			};
+			class GEA_civPatrol: Edit
+			{
+				property="GEA_civPatrol";
+				displayName="Patrol Civilians";
+				tooltip="Number of wandering ambient civilians (walk around the AO).";
+				typeName="NUMBER";
+				defaultValue="0";
+				expression="_this setVariable ['GEA_civPatrol', _value]";
+			};
+			class GEA_civGarrison: Edit
+			{
+				property="GEA_civGarrison";
+				displayName="Garrison Civilians";
+				tooltip="Number of civilians placed inside buildings (caps at usable slots).";
+				typeName="NUMBER";
+				defaultValue="0";
+				expression="_this setVariable ['GEA_civGarrison', _value]";
+			};
+			class GEA_civCars: Edit
+			{
+				property="GEA_civCars";
+				displayName="Civilian Cars";
+				tooltip="Number of empty parked civilian cars to scatter around the AO (no drivers).";
+				typeName="NUMBER";
+				defaultValue="0";
+				expression="_this setVariable ['GEA_civCars', _value]";
+			};
+			class GEA_mineFields: Edit
+			{
+				property="GEA_mineFields";
+				displayName="Minefields";
+				tooltip="Number of minefields to scatter on the AO perimeter. Each is a cluster of random mines of a random (moderate) size.";
+				typeName="NUMBER";
+				defaultValue="0";
+				expression="_this setVariable ['GEA_mineFields', _value]";
+			};
+			class GEA_showMineMarkers: Checkbox
+			{
+				property="GEA_showMineMarkers";
+				displayName="Show Minefield Markers";
+				tooltip="Mark each minefield on the map with a red hazard ellipse + icon. OFF = hidden hazards.";
+				typeName="BOOL";
+				defaultValue="false";
+				expression="_this setVariable ['GEA_showMineMarkers', _value]";
+			};
+			class GEA_roadblocks: Edit
+			{
+				property="GEA_roadblocks";
+				displayName="Roadblocks";
+				tooltip="Number of manned roadblocks (barbed wire + sandbag bunker + 2-3 guards) placed on roads near the AO edge.";
+				typeName="NUMBER";
+				defaultValue="0";
+				expression="_this setVariable ['GEA_roadblocks', _value]";
+			};
+			class GEA_heliRange: Edit
+			{
+				property="GEA_heliRange";
+				displayName="Heli Patrol Range (m)";
+				tooltip="Max distance BEYOND the AO radius that helicopters (and rotary drones) will patrol. Lower = tighter orbit. Default 1000.";
+				typeName="NUMBER";
+				defaultValue="1000";
+				expression="_this setVariable ['GEA_heliRange', _value]";
+			};
+			class GEA_planeRange: Edit
+			{
+				property="GEA_planeRange";
+				displayName="Plane Patrol Range (m)";
+				tooltip="Max distance BEYOND the AO radius that jets / planes (and fixed-wing drones) will patrol. Lower = tighter circuit. Default 2000.";
+				typeName="NUMBER";
+				defaultValue="2000";
+				expression="_this setVariable ['GEA_planeRange', _value]";
+			};
 			class GEA_generate: Checkbox
 			{
 				property="GEA_generate";
@@ -403,5 +528,5 @@ class CfgVehicles
 class cfgMods
 {
 	author="Online";
-	timepacked="1780086154";
+	timepacked="1782935307";
 };

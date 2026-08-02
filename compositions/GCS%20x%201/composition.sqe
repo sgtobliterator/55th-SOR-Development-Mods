@@ -1,0 +1,157 @@
+version=52;
+center[]={4334.8438,5,6349.6162};
+class items
+{
+	items=5;
+	class Item0
+	{
+		dataType="Object";
+		class PositionInfo
+		{
+			position[]={0.15625,1.0709887,0.38378906};
+		};
+		side="Empty";
+		flags=4;
+		class Attributes
+		{
+			name="GCS";
+		};
+		id=0;
+		type="Portable_GCS_Base_F";
+	};
+	class Item1
+	{
+		dataType="Object";
+		class PositionInfo
+		{
+			position[]={1.0810547,0.60745335,0.48388672};
+		};
+		side="Empty";
+		flags=4;
+		class Attributes
+		{
+		};
+		id=1;
+		type="Portable_GCS_Hub_F";
+	};
+	class Item2
+	{
+		dataType="Object";
+		class PositionInfo
+		{
+			position[]={0.23144531,0.67441797,-0.55126953};
+			angles[]={0,3.1415927,0};
+		};
+		side="Empty";
+		flags=4;
+		class Attributes
+		{
+			name="Chair";
+		};
+		id=2;
+		type="Land_OfficeChair_01_F";
+	};
+	class Item3
+	{
+		dataType="Logic";
+		class PositionInfo
+		{
+			position[]={0.15625,0,0.38378906};
+		};
+		name="Attachment";
+		init="GCS_Operator disableAI ""ANIM""; GCS_Operator attachTo [Attachment, [-0.0665,-0.6685,0]]; GCS_Operator enableMimics false; GCS_Operator switchMove ""UAV_Pilot_Idle""; Chair attachTo [Attachment, [0,-0.625,0.675]]; Chair setDir 180; ";
+		id=3;
+		type="Logic";
+	};
+	class Item4
+	{
+		dataType="Group";
+		side="West";
+		class Entities
+		{
+			items=1;
+			class Item0
+			{
+				dataType="Object";
+				class PositionInfo
+				{
+					position[]={-1.6245117,0.0014390945,-0.65039063};
+				};
+				side="West";
+				flags=7;
+				class Attributes
+				{
+					name="GCS_Operator";
+					class Inventory
+					{
+						class uniform
+						{
+							typeName="U_B_CombatUniform_mcam_tshirt";
+							isBackpack=0;
+							class MagazineCargo
+							{
+								items=2;
+								class Item0
+								{
+									name="Chemlight_green";
+									count=1;
+									ammoLeft=1;
+								};
+								class Item1
+								{
+									name="HandGrenade";
+									count=1;
+									ammoLeft=1;
+								};
+							};
+							class ItemCargo
+							{
+								items=1;
+								class Item0
+								{
+									name="FirstAidKit";
+									count=1;
+								};
+							};
+						};
+						map="ItemMap";
+						compass="ItemCompass";
+						watch="ItemWatch";
+						radio="ItemRadio";
+						gps="B_UavTerminal";
+						headgear="H_MilCap_mcamo";
+					};
+				};
+				id=5;
+				type="B_soldier_UAV_F";
+				class CustomAttributes
+				{
+					class Attribute0
+					{
+						property="pitch";
+						expression="_this setpitch _value;";
+						class Value
+						{
+							class data
+							{
+								class type
+								{
+									type[]=
+									{
+										"SCALAR"
+									};
+								};
+								value=1.01;
+							};
+						};
+					};
+					nAttributes=1;
+				};
+			};
+		};
+		class Attributes
+		{
+		};
+		id=4;
+	};
+};

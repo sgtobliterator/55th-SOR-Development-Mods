@@ -22,6 +22,12 @@ private _aoConfig = _registry getOrDefault [_aoId, createHashMap];
 private _entities = _aoConfig getOrDefault ["entities", []];
 private _markers  = _aoConfig getOrDefault ["markers",  []];
 
+// Deregister FIRST. The AO anchor is itself in _entities and carries a
+// "Deleted" handler that calls back into despawnAO; removing the registry
+// entry up front makes that re-entrant call a harmless no-op.
+_registry deleteAt _aoId;
+missionNamespace setVariable ["GEA_activeAOs", _registry, true];
+
 {
     if (_x isEqualType grpNull) then {
         { deleteVehicle _x } forEach (units _x);
@@ -32,9 +38,6 @@ private _markers  = _aoConfig getOrDefault ["markers",  []];
 } forEach _entities;
 
 { deleteMarker _x } forEach _markers;
-
-_registry deleteAt _aoId;
-missionNamespace setVariable ["GEA_activeAOs", _registry, true];
 
 diag_log text format ["[GEA] AO %1 despawned (%2 entities, %3 markers removed).",
     _aoId, count _entities, count _markers];

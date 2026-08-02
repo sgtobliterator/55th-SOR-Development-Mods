@@ -54,6 +54,13 @@ private _vehiclePct     = _aoConfig getOrDefault ["vehiclePct", [70, 20, 10]];
 private _airPatrols     = _aoConfig get "airPatrols";
 private _airPct         = _aoConfig getOrDefault ["airPct",     [60, 20, 10, 10]];
 private _showMarker     = _aoConfig get "showMarker";
+private _simplePathing  = _aoConfig getOrDefault ["simplePathing",  false];
+private _civFaction     = _aoConfig getOrDefault ["civFaction",     ""];
+private _civPatrol      = _aoConfig getOrDefault ["civPatrol",      0];
+private _civGarrison    = _aoConfig getOrDefault ["civGarrison",    0];
+private _civCars        = _aoConfig getOrDefault ["civCars",        0];
+private _mineFields     = _aoConfig getOrDefault ["mineFields",     0];
+private _roadblocks     = _aoConfig getOrDefault ["roadblocks",     0];
 
 // .rpt-only diagnostic helper.
 private _log = {
@@ -330,6 +337,69 @@ for "_i" from 1 to _airPatrols do {
     _airCounts get "drone", _airCounts get "plane"]] call _log;
 
 // =====================================================================
+//  5) ROADBLOCKS  (manned wire + sandbag tower on perimeter roads)
+//     Runs BEFORE civilians/civ-cars so roadblocks claim their road
+//     spots first. Civ cars (set-dressing) then register around the
+//     roadblock footprints via the shared obstacle registry. Otherwise a
+//     high civ-car count fills every road and starves the roadblocks.
+// =====================================================================
+private _roadblocksSpawned = 0;
+for "_i" from 1 to _roadblocks do {
+    private _res = [_aoConfig] call GEA_fnc_spawnRoadblock;
+    _res params [["_rbObjs", []], ["_rbGrp", grpNull]];
+    if (count _rbObjs > 0 || !isNull _rbGrp) then {
+        { _entities pushBack _x } forEach _rbObjs;
+        if (!isNull _rbGrp) then { _entities pushBack _rbGrp };
+        _roadblocksSpawned = _roadblocksSpawned + 1;
+    };
+};
+[format ["Roadblocks: %1/%2 built.", _roadblocksSpawned, _roadblocks]] call _log;
+
+// =====================================================================
+//  6) CIVILIANS  (ambient individuals — wander + in-house)
+// =====================================================================
+private _civGroupsSpawned = 0;
+if (_civPatrol > 0 || _civGarrison > 0) then {
+    private _civGroups = [_aoConfig] call GEA_fnc_spawnCivilians;
+    {
+        _entities pushBack _x;
+        _civGroupsSpawned = _civGroupsSpawned + 1;
+    } forEach _civGroups;
+    [format ["Civilians: %1 individuals spawned (target %2 patrol + %3 garrison).",
+        _civGroupsSpawned, _civPatrol, _civGarrison]] call _log;
+};
+
+// =====================================================================
+//  7) CIVILIAN CARS  (empty parked set-dressing)
+// =====================================================================
+private _civCarsSpawned = 0;
+if (_civCars > 0) then {
+    private _cars = [_aoConfig] call GEA_fnc_spawnCivilianCars;
+    {
+        _entities pushBack _x;
+        _civCarsSpawned = _civCarsSpawned + 1;
+    } forEach _cars;
+    [format ["Civilian cars: %1/%2 parked.", _civCarsSpawned, _civCars]] call _log;
+};
+
+// =====================================================================
+//  8) MINEFIELDS  (perimeter clusters; optional markers)
+//     Runs BEFORE the marker/anchor block so any minefield markers are
+//     included in the AO anchor's snapshot and clean up with the AO.
+// =====================================================================
+private _minefieldsSpawned = 0;
+private _minesTotal        = 0;
+for "_i" from 1 to _mineFields do {
+    private _mines = [_aoConfig] call GEA_fnc_spawnMinefield;
+    if (count _mines > 0) then {
+        { _entities pushBack _x } forEach _mines;
+        _minefieldsSpawned = _minefieldsSpawned + 1;
+        _minesTotal = _minesTotal + count _mines;
+    };
+};
+[format ["Minefields: %1/%2 fields, %3 mines total.", _minefieldsSpawned, _mineFields, _minesTotal]] call _log;
+
+// =====================================================================
 //  Public AO markers (visible to all players) + AO anchor object.
 //  The anchor is what makes the markers Zeus-deletable: deleting it
 //  via right-click → its "Deleted" event handler wipes the markers.
@@ -380,17 +450,25 @@ if (_showMarker) then {
         _anchorObj setVariable ["GEA_markers",  _markers, true];
         _anchorObj setVariable ["GEA_isAnchor", true,     true];
         _anchorObj allowDamage false;
+        // Hide the 3D sphere from regular players. The anchor still shows
+        // as a selectable icon in the Zeus / curator interface, so deleting
+        // it (which tears down the whole AO) still works.
+        _anchorObj hideObjectGlobal true;
 
-        // When the anchor is deleted (via Zeus, /removeAllCurators, or
-        // despawnAO), drop the markers. The EH fires on the host where
-        // the object dies, which is the server for server-spawned objects.
+        // Deleting the AO anchor tears down the WHOLE AO — every spawned
+        // unit, vehicle, static, car, mine field and roadblock, plus the
+        // markers — by routing through despawnAO. This frees the area so a
+        // new AO placed there isn't blocked by leftover objects. (Falls
+        // back to just clearing markers if the id is somehow missing.)
         _anchorObj addEventHandler ["Deleted", {
             params ["_entity"];
-            private _ms = _entity getVariable ["GEA_markers", []];
-            { deleteMarker _x } forEach _ms;
             private _aid = _entity getVariable ["GEA_aoId", ""];
-            diag_log text format ["[GEA] AO anchor deleted — %1 markers removed (aoId=%2)",
-                count _ms, _aid];
+            if (_aid != "") then {
+                [_aid] call GEA_fnc_despawnAO;
+            } else {
+                { deleteMarker _x } forEach (_entity getVariable ["GEA_markers", []]);
+            };
+            diag_log text format ["[GEA] AO anchor deleted — AO %1 torn down.", _aid];
         }];
 
         // Anchor counts as an entity so registerCleanup also Zeus-edits it.
@@ -406,9 +484,11 @@ if (_showMarker) then {
 [_aoConfig, _entities] call GEA_fnc_registerCleanup;
 
 // --- Final summary chat (single line, shown to curator) --------------
-[format ["AO '%1' generated — %2 patrol, %3 garrison grp (%4 units), %5 static, %6 veh, %7 air.",
+[format ["AO '%1' generated — %2 patrol, %3 garrison grp (%4 units), %5 static, %6 veh, %7 air, %8 civ, %9 civ-car, %10 minefield, %11 roadblock.%12",
     _factionDisplay,
     _patrolsSpawned, _garrisonGroupsOk, _garrisonPlaced,
-    _staticsSpawned, _vehiclesSpawned, _airSpawned]] call _saySummary;
+    _staticsSpawned, _vehiclesSpawned, _airSpawned,
+    _civGroupsSpawned, _civCarsSpawned, _minefieldsSpawned, _roadblocksSpawned,
+    (if (_simplePathing) then {" [simple pathing]"} else {""})]] call _saySummary;
 
 _aoId

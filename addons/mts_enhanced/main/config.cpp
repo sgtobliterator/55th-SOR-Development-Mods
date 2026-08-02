@@ -13,8 +13,8 @@ class CfgPatches
 		author="$STR_mts_main_authors";
 		url="$STR_mts_main_URL";
 		version=1.1;
-		versionStr="1.10.0.251012";
-		versionAr[]={1,10,0,251012};
+		versionStr="1.10.1.260719";
+		versionAr[]={1,10,1,260719};
 	};
 };
 class CfgSettings

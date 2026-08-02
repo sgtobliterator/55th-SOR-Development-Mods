@@ -57,6 +57,9 @@ if (isNull _grp) exitWith {
 } forEach (units _grp);
 _grp setVariable ["GEA_aoId", _aoConfig get "id", true];
 
-[_grp, _center, _radius] call BIS_fnc_taskPatrol;
+// Route the group. "Simple Pathing" (config key) swaps the dynamic
+// BIS_fnc_taskPatrol for a cheap 2-waypoint + cycle loop.
+private _simple = _aoConfig getOrDefault ["simplePathing", false];
+[_grp, _center, _radius, _simple] call GEA_fnc_assignPatrol;
 
 _grp

@@ -3,35 +3,32 @@
 [h1]FORGES OF DORN: Zeus Additions[/h1]
 [i]Zeus & 3DEN Module Expansion[/i]
 
-[b]Forges of Dorn[/b] is a collection of streamlined tools designed to automate AI behavior, spawning, and mission flow. It aims to improve the Zeus experience by reducing the workload during large-scale operations—minimizing repetitive manual setup and the need for constant micro-management.
+A collection of streamlined tools designed to automate AI behavior, spawning, and mission flow. It aims to improve the [b]Zeus[/b] experience by reducing the workload during large-scale operations; less repetitive manual setup and constant micro-management, while also giving [i]Mission-makers[/i] modules to pre-build their entire OP in [b]3DEN[/b].
 
 [b]Now updated with Vanilla & CBA fallbacks[/b], allowing core modules to function without requiring LAMBS as a hard dependency.
 
 [h2]Core Features[/h2]
 [list]
 [*] [b]Spawn AI Group[/b] (Zeus & 3DEN) - Advanced spawning with [VANILLA], [CBA], or [LAMBS] tasks. Supports faction/group classnames and quoted/unquoted strings.
-[*] [b]Garrison Area[/b] (Zeus) - Instantly occupy buildings. includes a vanilla fallback that uses Hold/Suppress logic and scalable area patrols, height filters and more.
+[*] [b]Garrison Area[/b] (Zeus) - Instantly occupy buildings. Includes a vanilla fallback that uses Hold/Suppress logic, scalable area patrols, height filters and more.
 [*] [b]Defense OP Generator[/b] (Zeus & 3DEN) - Create infinite wave-defense scenarios with directional arcs and Line-of-Sight spawn checks.
-[*] [b]FOD Tasks[/b] (Zeus) - Context menu and waypoint types for LAMBS (Ambush, Hit & Run, QRF). Now loads dynamically only when LAMBS is present.
+[*] [b]FOD Tasks[/b] (Zeus & 3DEN) - Context menu, waypoint, and module types for Tactical Push, Mobilize QRF, Support Vehicle, Setup Ambush, Hit & Run, and Reserve/QRF. Always available, with enhanced LAMBS tactics used automatically when present.
 [*] [b]Utility Tools[/b] - Vehicle Garage (3DEN/Zeus), Weapon Add/Remove, and Faction Variable Logger.
 [/list]
 
-[h2]Spawn AI Group (3DEN & Zeus)[/h2]
-Spawn fully configured groups with a single click or trigger. The UI now features Prefix Tags ([LAMBS], [CBA], [VANILLA]) to clearly show which tasks require specific dependencies.
-
-[b]New Flexibility:[/b]
+[h2]Spawn AI Group[/h2]
+Spawn fully configured AI groups on demand via Zeus or pre-placed 3DEN trigger.
 [list]
-[*] [b]Smart Input:[/b] Enter unit classnames with or without quotes (e.g., [i]O_Soldier_F[/i] or [i]"O_Soldier_F"[/i]).
-[*] [b]Faction & Group Support:[/b] (3DEN) Define a [b]Faction Classname[/b] or [b]CfgGroups entry[/b] (e.g., [i]OIA_InfSentry[/i]) to automate unit selection.
-[*] [b]Expanded Tasks:[/b] Includes new [b]Vanilla[/b] (Sentry, Guard, Seek & Destroy) and [b]CBA[/b] (Attack, Defend, Patrol, Search) behaviors.
+[*] [b]Zeus:[/b] Pick faction, group size, and task from the dialog, units appear instantly at the placed marker.
+[*] [b]3DEN:[/b] Define a [b]Unit Classname[/b], [b]Faction Classname[/b] or [b]CfgGroups entry[/b] (e.g., [i]OIA_InfSentry[/i]) and activate via trigger.
+[*] [b]Task Tags:[/b] Prefix labels ([VANILLA], [CBA], [LAMBS]) make dependency requirements easily visible.
 [/list]
 
 [h2]Garrison Area[/h2]
 Populate a zone with AI defenders instantly.
 [list]
 [*] [b]LAMBS Version:[/b] Uses native LAMBS Garrison logic for dynamic building defense.
-[*] [b]Vanilla Fallback:[/b] Automatically active if LAMBS is missing. Units occupy buildings with [b]Hold/Suppress[/b] logic, disabling pathing until engaged.
-[*] [b]Area Patrols:[/b] Scalable patrol elements (1-4 units) will walk perimeter routes to secure the objective.
+[*] [b]Vanilla Fallback:[/b] Automatically active if LAMBS is missing. Units occupy buildings with [b]Hold/Suppress[/b] logic, disabling pathing until engaged; a sub-group can patrol like with LAMBS.
 [/list]
 
 [h2]Defense OP Generator[/h2]
@@ -42,34 +39,41 @@ Continuously spawns AI waves attacking a fixed position.
 [*] [b]Features:[/b] Supports directional attacks (sector arcs), Line-of-Sight checks (spawning behind cover), and "Players Only" targeting.
 [/list]
 
-[h2]FOD Tasks (ZEN Waypoints)[/h2]
-Custom tasks integrated into the ZEN context menu and waypoint list. Note: This module now uses an optional config and will only load if [b]LAMBS_WP[/b] is detected.
+[h2]Tactical Push[/h2]
+Send AI groups sprinting toward a target in short bounds, taking cover and returning fire only when actually shot at, then pushing on again.
 [list]
-[*] [b]Setup Ambush:[/b] Move to cover, go silent, and wait for contact.
-[*] [b]Hit & Run:[/b] Engage briefly, retreat, and reposition—repeat indefinitely.
-[*] [b]Reserve/QRF:[/b] Hold position until enemies are detected nearby, then rush to assist.
+[*] [b]Movement:[/b] Groups advance in bounds at full speed, holding spacing so they don't bunch up, and clear the area room by room if enemies remain on arrival.
+[*] [b]Cover & Return Fire:[/b] Units break to the nearest building, wall, bush, tree or rock with a clear line of sight on the enemy (or a free spot nearby if nothing fits), return fire, then push on after a short cooldown.
+[*] [b]Vehicles:[/b] Mounted groups drive in and bail out near the objective, leaving the driver and gunner(s) behind in their own vehicle group instead of dragging them out on foot.
+[*] [b]Available as:[/b] a Zeus waypoint, context menu action, group module, Spawn AI Group task, or 3DEN module.
 [/list]
 
-[i]Requires [url=https://steamcommunity.com/sharedfiles/filedetails/?id=1858075458]LAMBS[/url] for FULL usage, but works fine without.
+[h2]FOD Tasks (ZEN Waypoints)[/h2]
+Custom AI tasks available as context menu actions (grouped under their own [b]FOD: ZA Waypoints[/b] category), Eden waypoints, and modules. All are always available; Setup Ambush, Hit & Run, and Reserve/QRF use LAMBS Waypoints for more advanced tactics when loaded, with a vanilla camp/rush fallback otherwise.
+[list]
+[*] [b]Setup Ambush:[/b] Move to cover, go silent, and wait for contact.
+[*] [b]Hit & Run:[/b] Engage briefly, retreat, and reposition, repeat indefinitely.
+[*] [b]Reserve/QRF:[/b] Hold position until enemies are detected nearby, then rush to assist.
+[*] [b]Mobilize QRF:[/b] Mount up transport and rush to reinforce the nearest allied group in need, splitting off the vehicle crew and taking cover on arrival. Helicopters land at the destination, planes paradrop the group and return to base.
+[*] [b]Support Vehicle:[/b] Drive (or fly) to support the nearest allied group in need, then follow and provide fire support from a distance without overtaking them or disembarking. Aircraft loiter over the supported group instead.
+[/list]
+
+[i]Requires [url=https://steamcommunity.com/sharedfiles/filedetails/?id=1858075458]LAMBS[/url] for FULL usage, but works fine without.[/i]
 
 [h2]"Log Faction Variables" - 3DEN Editor Tool[/h2]
-A small quality-of-life tool for scenario builders. Select any unit in the 3DEN editor, right-click and choose [b]Log Faction Variables (FOD_ZA)[/b] under the [b]Log[/b] submenu. The faction classname and every group classname from that faction's CfgGroups entry are copied straight to your clipboard, one per line - ready to paste into module fields or scripts.
+A small quality-of-life tool for scenario builders. Select any unit in the 3DEN editor, right-click and choose [b]Log Faction Variables (FOD_ZA)[/b] under the [b]Log[/b] submenu. The faction classname and every group classname from that faction's CfgGroups entry are copied straight to your clipboard, one per line, ready to paste into module fields or scripts.
 
 [b]LOTS OF SETTINGS![/b]
-The mod is very configurable as per our design philosophy, this can all be found in the CBA_A3 provided Addon settings.
+The mod is very configurable as per our design philosophy, all found in the CBA_A3 provided Addon settings.
 
 [h1]FAQ[/h1]
 [b]Q:[/b] Does the Vehicle Garage have a Whitelist/Blacklist?
-[b]A:[/b] Yes, you can block vehicles in a bunch of ways (side, classnames, etc.). Instead of hiding them, the vehicles stay in the list but are unspawnable (greyed out). You can however 'remove' an entire vehicle category.
-
-[h2]Future Plans:[/h2]
-- [strike]'Music Queue' module[/strike]
-- [strike]Charge Module[/strike] [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3560796660]Someone already made this [/url]
+[b]A:[/b] Yes, you can block vehicles in a bunch of ways (side, classnames, etc.). Blocked vehicles stay in the list but greyed out (unspawnable); you can also 'remove' an entire vehicle category.
 
 [h1]COMPATIBILITY[/h1]
 ✔ Works together with [i]LAMBS[/i]
 ✔ Designed with multiplayer in mind.
-✔ Lightweight performance impact (optimized light-weight scripts).
+✔ Lightweight performance impact (optimized scripts).
 
 [h1]CREDITS[/h1]
 [b]Bohemia Interactive[/b] - For Arma 3, duh.

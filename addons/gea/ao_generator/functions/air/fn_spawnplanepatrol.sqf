@@ -96,7 +96,11 @@ private _class = selectRandom _pool;
 // Spawn outside the AO, moderate altitude (lower than jets — props
 // usually cruise lower).
 // ---------------------------------------------------------------------
-private _spawnDist = _radius + 1000;
+// Reach capped by the "Plane Patrol Range" setting (max distance beyond
+// the AO radius). Default (2000) leaves the original behaviour unchanged.
+private _range    = _aoConfig getOrDefault ["planeRange", 2000];
+private _maxDist  = _radius + _range;
+private _spawnDist = ((_radius + 1000) min _maxDist) max (_radius + 400);
 private _spawnPos  = _center getPos [_spawnDist, random 360];
 _spawnPos set [2, 300];
 
@@ -128,11 +132,13 @@ while {count (waypoints _crewGroup) > 0} do {
     deleteWaypoint ((waypoints _crewGroup) select 0);
 };
 
-private _wpCount = 4 + (floor random 3);   // 4..6
+// "Simple Pathing" clamps the route to 2 waypoints for cheaper AI cost.
+private _simple = _aoConfig getOrDefault ["simplePathing", false];
+private _wpCount = if (_simple) then { 2 } else { 4 + (floor random 3) };   // 4..6
 private _wpPositions = [];
 for "_i" from 1 to _wpCount do {
     private _angle = random 360;
-    private _dist  = _radius + 400 + (random 800);
+    private _dist  = (_radius + 400 + (random 800)) min _maxDist;
     _wpPositions pushBack (_center getPos [_dist, _angle]);
 };
 

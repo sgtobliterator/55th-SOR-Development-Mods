@@ -29,10 +29,10 @@ PREP_RECOMPILE_END;
 					private _grp = group _entity;
 					[{
 						params ["_ent", "_grp"];
-						[QGVAR(setFilter), [_ent], _grp] call CBA_fnc_targetEvent;
+						[QGVAR(setFilter), [_ent, "CUSTOM"], _grp] call CBA_fnc_targetEvent;
 					}, [_ent, _grp]] call CBA_fnc_execNextFrame;
 				} else {
-					[QGVAR(setFilter), [_entity], group _entity] call CBA_fnc_targetEvent;
+					[QGVAR(setFilter), [_entity, _value], group _entity] call CBA_fnc_targetEvent;
 				};
 			},
 			{(group _entity) getVariable ["targetFilterType", "ALL"]},
@@ -145,12 +145,12 @@ PREP_RECOMPILE_END;
 						private _cf = _grp getVariable [QGVAR(customFilter), createHashMap];
 						[{
 							params ["_leader", "_grp", "_cf"];
-							[QGVAR(setFilter), [_leader], _grp] call CBA_fnc_targetEvent;
+							[QGVAR(setFilter), [_leader, "CUSTOM"], _grp] call CBA_fnc_targetEvent;
 						}, [leader _grp, _grp, _cf]] call CBA_fnc_execNextFrame;
 					} forEach SELECTED_GROUPS;
 				} else {
 					{
-						[QGVAR(setFilter), [leader _x], _x] call CBA_fnc_targetEvent;
+						[QGVAR(setFilter), [leader _x, _value], _x] call CBA_fnc_targetEvent;
 					} forEach SELECTED_GROUPS;
 				};
 			},

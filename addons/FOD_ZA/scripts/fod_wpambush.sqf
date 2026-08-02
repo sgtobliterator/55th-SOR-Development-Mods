@@ -1,4 +1,4 @@
-// FOD: Setup Ambush waypoint script
+// Setup Ambush waypoint script
 // Called by ZEN when the waypoint is reached by a group.
 // Uses taskEntrench with stealth/ambush mode enabled.
 params ["_group", "_position"];

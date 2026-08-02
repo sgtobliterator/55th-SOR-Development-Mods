@@ -78,6 +78,8 @@ if !(_hasZen) exitWith
     }, 'a3\ui_f\data\gui\rsc\rscdisplayarsenal\spacegarage_ca.paa'] call zen_custom_modules_fnc_register;
 
 private _hasLambs = isClass (configFile >> "CfgPatches" >> "lambs_wp");
+
+// Garrison Area, LAMBS version. Registered only when LAMBS Waypoints is present; the vanilla version is registered further down when LAMBS is absent. Defense Op Generator and Spawn AI Group are registered unconditionally below, falling back to vanilla/CBA behaviour for their LAMBS-only options.
 if (_hasLambs) then
 {
 	//GARRISON
@@ -214,11 +216,12 @@ if (_hasLambs) then
 		}, {}, [_modulePosASL, _attachedObject]] call zen_dialog_fnc_create;
 
 	},"\FOD_ZA\pictures\Garrison.paa"] call zen_custom_modules_fnc_register;
+};
 
-	/*
-		Defense Op Generator
-	*/
-	["[FOD] Zeus Additions", "Defense Op Generator", 
+/*
+	Defense Op Generator, registered unconditionally. LAMBS Rush falls back to a Seek & Destroy waypoint when LAMBS is absent.
+*/
+	["[FOD] Zeus Additions", "Defense Op Generator",
 		{
 			params [["_modulePosASL", [0,0,0]],["_attachedObject", objnull]];
 			
@@ -431,7 +434,7 @@ if (_hasLambs) then
 									};
 									_pos
 								} else {
-									[_bld, _radius, _side, _LoSToggle] call PHEN_fnc_findValidSpawnPos
+									[_bld, _radius, _side, _LoSToggle] call PHEN_fnc_findValidSpawnPos;
 								};
 
 								if !(_spawnPos isEqualTo [0,0,0]) then {
@@ -470,8 +473,9 @@ if (_hasLambs) then
 										[_grp, true] remoteExec ["deleteGroupWhenEmpty", groupOwner _grp];
 									}; 
  
-									// Apply behavior
-									if (_rush) then {
+									// Apply behavior, LAMBS Rush needs LAMBS Waypoints; without it, fall back to a Seek & Destroy waypoint regardless of the checkbox
+									private _hasLambsWp = isClass (configFile >> "CfgPatches" >> "lambs_wp");
+									if (_rush && _hasLambsWp) then {
 										[_grp, _radius, 15, [], getPosATL _bld, true] spawn lambs_wp_fnc_taskRush;
 									} else {
 										private _wp = _grp addWaypoint [getPosATL _bld, -1];
@@ -515,8 +519,8 @@ if (_hasLambs) then
 	{
 		params ["_modulePosASL", "_attachedObject"];
 
-		private _tasksArr  = ["patrol", "garrison", "camp", "defend", "ambush", "cqb", "rush", "hunt", "creep", "assault", "reserve", "hitandrun", "cbaattack", "cbadefend", "cbapatrol", "cbasearch", "sentry", "guard", "seekanddestroy", "vanillagarrison", "random", " - ", "notask", " - "];
-		private _tasksDisp = ["[LAMBS] Patrol", "[LAMBS] Garrison", "[LAMBS] Camp", "[LAMBS] Defend", "[LAMBS] Ambush", "[LAMBS] CQB", "[LAMBS] Rush", "[LAMBS] Hunt", "[LAMBS] Creep", "[LAMBS] Assault", "[LAMBS] Reserve/QRF", "[LAMBS] Hit & Run", "[CBA] Attack", "[CBA] Defend", "[CBA] Patrol", "[CBA] Search Area", "[VANILLA] Sentry", "[VANILLA] Guard", "[VANILLA] Seek & Destroy", "[VANILLA] Garrison", "Random", "", "No Task", ""];
+		private _tasksArr  = ["patrol", "garrison", "camp", "defend", "ambush", "cqb", "rush", "hunt", "creep", "assault", "reserve", "hitandrun", "cbaattack", "cbadefend", "cbapatrol", "cbasearch", "sentry", "guard", "seekanddestroy", "vanillagarrison", "tacticalpush", "mobilizeqrf", "random", " - ", "notask", " - "];
+		private _tasksDisp = ["[LAMBS] Patrol", "[LAMBS] Garrison", "[LAMBS] Camp", "[LAMBS] Defend", "[LAMBS] Ambush", "[LAMBS] CQB", "[LAMBS] Rush", "[LAMBS] Hunt", "[LAMBS] Creep", "[LAMBS] Assault", "[LAMBS] Reserve/QRF", "[LAMBS] Hit & Run", "[CBA] Attack", "[CBA] Defend", "[CBA] Patrol", "[CBA] Search Area", "[VANILLA] Sentry", "[VANILLA] Guard", "[VANILLA] Seek & Destroy", "[VANILLA] Garrison", "[VANILLA] Tactical Push", "[VANILLA] Mobilize QRF", "Random", "", "No Task", ""];
 
 		//STEP 1: Side 
 		[
@@ -642,6 +646,11 @@ if (_hasLambs) then
 											}],
 											["seekanddestroy", { [_grp, _spawnPos, _radius] call FOD_ZA_fnc_taskSeekAndDestroy }],
 											["vanillagarrison",{ [_grp, _spawnPos, _radius] call FOD_ZA_fnc_taskVanillaGarrison }],
+											["tacticalpush",   { [_grp, ([_grp, _spawnPos] call FOD_ZA_fnc_findNearestEnemyPos), _radius * 0.2, 40, _playersOnly] spawn FOD_ZA_fnc_taskTacticalPush }],
+											["mobilizeqrf",    {
+												private _targetInfo = [_grp, _spawnPos] call FOD_ZA_fnc_findNearestAllyPos;
+												[_grp, (_targetInfo select 0), _radius * 0.2, (_targetInfo select 1), true] spawn FOD_ZA_fnc_taskMobilizeQRF;
+											}],
 											// CBA tasks, CBA is always loaded
 											["cbaattack",      { [_grp, _spawnPos, _radius] call CBA_fnc_taskAttack }],
 											["cbadefend",      { [_grp, _spawnPos, _radius] call CBA_fnc_taskDefend }],
@@ -661,9 +670,32 @@ if (_hasLambs) then
 											["reserve",        { [_grp, _radius, _playersOnly] spawn FOD_ZA_fnc_taskReserve                              }],
 											["hitandrun",      { [_grp, _spawnPos, _radius, _playersOnly] spawn FOD_ZA_fnc_taskHitAndRun                 }]
 										];
+
+										// LAMBS-only task keys and their vanilla/CBA stand-ins, used when LAMBS Waypoints is not loaded
+										private _hasLambsWp = isClass (configFile >> "CfgPatches" >> "lambs_wp");
+										private _fallbackKeys = ["patrol", "garrison", "camp", "cqb", "rush", "hunt", "creep", "assault"];
+										private _lambsFallback = createHashMapFromArray [
+											["patrol", "cbapatrol"],
+											["garrison", "vanillagarrison"],
+											["camp", "cbadefend"],
+											["cqb", "cbaattack"],
+											["rush", "seekanddestroy"],
+											["hunt", "seekanddestroy"],
+											["creep", "cbasearch"],
+											["assault", "seekanddestroy"]
+										];
+
 										private _lambsKeys = keys _lambsMap - ["notask"];
+										// keep Random from selecting a LAMBS-only task when LAMBS is absent
+										if (!_hasLambsWp) then { _lambsKeys = _lambsKeys select { !(_x in _fallbackKeys) }; };
 										private _resolvedKey = if (_taskKey == "random") then { selectRandom _lambsKeys } else { _taskKey };
-										[] call (_lambsMap getOrDefault [_resolvedKey, { [_grp, _spawnPos, _radius] call lambs_wp_fnc_taskPatrol }]);
+										// remap a LAMBS-only task to its vanilla/CBA stand-in when LAMBS is absent
+										if (!_hasLambsWp && { _resolvedKey in _fallbackKeys }) then {
+											private _fallbackKey = _lambsFallback get _resolvedKey;
+											["[FOD_ZA_SpawnAIGroup] LAMBS not loaded, task '%1' falling back to '%2'", _resolvedKey, _fallbackKey] call FOD_ZA_fnc_debugMessage;
+											_resolvedKey = _fallbackKey;
+										};
+										[] call (_lambsMap getOrDefault [_resolvedKey, { [_grp, _spawnPos, _radius] call CBA_fnc_taskPatrol }]);
 									};
 								},
 								{},
@@ -745,6 +777,10 @@ if (_hasLambs) then
 												}],
 												["seekanddestroy", { [_grp, _spawnPos, _radius] call FOD_ZA_fnc_taskSeekAndDestroy }],
 												["vanillagarrison",{ [_grp, _spawnPos, _radius] call FOD_ZA_fnc_taskVanillaGarrison }],
+												["mobilizeqrf",    {
+													private _targetInfo = [_grp, _spawnPos] call FOD_ZA_fnc_findNearestAllyPos;
+													[_grp, (_targetInfo select 0), _radius * 0.2, (_targetInfo select 1), true] spawn FOD_ZA_fnc_taskMobilizeQRF;
+												}],
 												// CBA tasks, CBA is always loaded
 												["cbaattack",      { [_grp, _spawnPos, _radius] call CBA_fnc_taskAttack }],
 												["cbadefend",      { [_grp, _spawnPos, _radius] call CBA_fnc_taskDefend }],
@@ -764,10 +800,30 @@ if (_hasLambs) then
 												["reserve",        { [_grp, _radius, _playersOnly] spawn FOD_ZA_fnc_taskReserve                              }],
 												["hitandrun",      { [_grp, _spawnPos, _radius, _playersOnly] spawn FOD_ZA_fnc_taskHitAndRun                 }]
 											];
+											// LAMBS-only task keys and their vanilla/CBA stand-ins, used when LAMBS Waypoints is not loaded
+											private _hasLambsWp = isClass (configFile >> "CfgPatches" >> "lambs_wp");
+											private _fallbackKeys = ["patrol", "garrison", "camp", "cqb", "rush", "hunt", "creep", "assault"];
+											private _lambsFallback = createHashMapFromArray [
+												["patrol", "cbapatrol"],
+												["garrison", "vanillagarrison"],
+												["camp", "cbadefend"],
+												["cqb", "cbaattack"],
+												["rush", "seekanddestroy"],
+												["hunt", "seekanddestroy"],
+												["creep", "cbasearch"],
+												["assault", "seekanddestroy"]
+											];
+
 											private _lambsKeys = keys _lambsMap - ["notask"];
+											// keep Random from selecting a LAMBS-only task when LAMBS is absent
+											if (!_hasLambsWp) then { _lambsKeys = _lambsKeys select { !(_x in _fallbackKeys) }; };
 											private _resolvedKey = if (_taskKey == "random") then { selectRandom _lambsKeys } else { _taskKey };
+											// remap a LAMBS-only task to its vanilla/CBA stand-in when LAMBS is absent
+											if (!_hasLambsWp && { _resolvedKey in _fallbackKeys }) then {
+												_resolvedKey = _lambsFallback get _resolvedKey;
+											};
 											["[FOD_ZA_SpawnAIGroup] Step 3B: spawned group '%1' (%2 units), side=%3, task=%4, radius=%5m", _grpClass, count units _grp, str _side, _resolvedKey, _radius] call FOD_ZA_fnc_debugMessage;
-											[] call (_lambsMap getOrDefault [_resolvedKey, { [_grp, _spawnPos, _radius] call lambs_wp_fnc_taskPatrol }]);
+											[] call (_lambsMap getOrDefault [_resolvedKey, { [_grp, _spawnPos, _radius] call CBA_fnc_taskPatrol }]);
 
 										} forEach _selGroups;
 									};
@@ -787,8 +843,9 @@ if (_hasLambs) then
 
 	}, "a3\ui_f_curator\data\displays\rscdisplaycurator\modegroups_ca.paa"] call zen_custom_modules_fnc_register;
 
-} else {
-	diag_log "******LAMBS not detected. Garrison Area will run in vanilla mode. Defense OP Generator and Spawn AI Group require LAMBS.";
+// Garrison Area, vanilla version. Registered only when LAMBS is absent.
+if (!_hasLambs) then {
+	diag_log "******LAMBS not detected. Garrison Area runs in vanilla mode; Defense Op Generator and Spawn AI Group use vanilla/CBA fallbacks.";
 
 	// vanilla garrison, no LAMBS required, registered only when LAMBS is absent
 	["[FOD] Zeus Additions", "Garrison Area",
@@ -1004,7 +1061,7 @@ if (_hasLambs) then
 
 	if (_attachedobject isKindOf "CAManBase") exitWith { [objNull, "Unit is not supported!"] call BIS_fnc_showCuratorFeedbackMessage;  };
 
-	// First dialog - weapon category selection
+	// First dialog, weapon category selection
 	[
 		"Select Weapon Category", 
 		[
@@ -1069,7 +1126,7 @@ if (_hasLambs) then
 
 			_SlotSelectionDisplay = [_slots, _slotsDisplay, 0];
 
-			// Second dialog - specific weapon and slot selection
+			// Second dialog, specific weapon and slot selection
 			[
 				"Select Weapon and Slot", 
 				[
@@ -1190,3 +1247,217 @@ if (_hasLambs) then
 	] call zen_dialog_fnc_create;
 
 },"\FOD_ZA\pictures\weaponremove.paa"] call zen_custom_modules_fnc_register;
+
+//TACTICAL PUSH, ATTACH TO GROUP
+["[FOD] Zeus Additions", "Task Tactical Push",
+{
+	params ["_modulePosASL", "_attachedObject"];
+
+    [_attachedObject, {
+        params ["_successful", "_attachedObject", "_position"];
+        
+            if (_successful) then {
+                curatorMouseOver params ["_type", "_entity"];
+                
+               deleteVehicle _logic;
+
+			   if (_attachedObject isKindOf "AllVehicles") then { _attachedObject = ((crew _attachedObject) #0); };
+
+				if (isNull _attachedObject || { !(_attachedObject isKindOf "CAManBase") }) exitWith {
+					[objNull, "Attach this module to a unit to push that unit's group toward the nearest enemy."] call BIS_fnc_showCuratorFeedbackMessage;
+				};
+
+				private _group = group _attachedObject;
+				_selectorPos = ATLToASL _position;
+				_ExportPosition = [_group, _selectorPos] call FOD_ZA_fnc_findNearestEnemyPos;
+
+				[_group, _ExportPosition, 25, 40] spawn FOD_ZA_fnc_taskTacticalPushToggle;
+
+				[format ["Tactical Push: %1 is now pushing toward the nearest enemy.", groupId _group]] call FOD_ZA_fnc_curatorFeedback;
+        };
+    }, [], "Select Target Area"] call zen_common_fnc_selectposition;
+
+}, "\FOD_ZA\pictures\FOD_ZA_TacPush_icon"] call zen_custom_modules_fnc_register;
+
+//RESERVE/QRF, ATTACH TO GROUP
+["[FOD] Zeus Additions", "Task Reserve/QRF",
+{
+	params ["_modulePosASL", "_attachedObject"];
+
+	if (_attachedObject isKindOf "AllVehicles") then { _attachedObject = (crew _attachedObject) param [0, objNull]; };
+
+	if (isNull _attachedObject || { !(_attachedObject isKindOf "CAManBase") }) exitWith {
+		[objNull, "Attach this module to a unit to set up Reserve/QRF for that unit's group."] call BIS_fnc_showCuratorFeedbackMessage;
+	};
+
+	private _group = group _attachedObject;
+
+	[
+		"Reserve / QRF Options",
+		[
+			["SLIDER:RADIUS", ["Radius (m)", "Detection/rush radius around the group's position."], [25, 500, 150, 0, ASLToAGL _modulePosASL, [255, 255, 0, 255]]],
+			["CHECKBOX", ["Players Only", "Only react to and rush toward player-controlled enemies."], [false]]
+		],
+		{
+			params ["_values", "_arguments"];
+			_values params ["_radius", "_playersOnly"];
+			_arguments params ["_group"];
+
+			[_group, _radius, _playersOnly] spawn FOD_ZA_fnc_taskReserve;
+
+			[format ["Reserve/QRF: %1 will hold and rush to assist within %2m.", groupId _group, _radius]] call FOD_ZA_fnc_curatorFeedback;
+		},
+		{},
+		[_group]
+	] call zen_dialog_fnc_create;
+
+}, "\FOD_ZA\pictures\FOD_ZA_ReserveQRF_icon.paa"] call zen_custom_modules_fnc_register;
+
+//HIT AND RUN, ATTACH TO GROUP
+["[FOD] Zeus Additions", "Task Hit & Run",
+{
+	params ["_modulePosASL", "_attachedObject"];
+
+	if (_attachedObject isKindOf "AllVehicles") then { _attachedObject = (crew _attachedObject) param [0, objNull]; };
+
+	if (isNull _attachedObject || { !(_attachedObject isKindOf "CAManBase") }) exitWith {
+		[objNull, "Attach this module to a unit to set up Hit & Run for that unit's group."] call BIS_fnc_showCuratorFeedbackMessage;
+	};
+
+	[_attachedObject, {
+		params ["_successful", "_attachedObject", "_position"];
+
+		if (_successful && { !isNull _attachedObject }) then {
+			private _group = group _attachedObject;
+
+			[
+				"Hit & Run Options",
+				[
+					["SLIDER:RADIUS", ["Radius (m)", "Engagement radius around the selected point."], [25, 500, 200, 0, _position, [255, 0, 0, 255]]],
+					["CHECKBOX", ["Players Only", "Only react to and engage player-controlled enemies."], [false]]
+				],
+				{
+					params ["_values", "_arguments"];
+					_values params ["_radius", "_playersOnly"];
+					_arguments params ["_group", "_spawnPos"];
+
+					[_group, _spawnPos, _radius, _playersOnly] spawn FOD_ZA_fnc_taskHitAndRun;
+
+					[format ["Hit & Run: %1 will engage and fall back near the selected point (radius %2m).", groupId _group, _radius]] call FOD_ZA_fnc_curatorFeedback;
+				},
+				{},
+				[_group, _position]
+			] call zen_dialog_fnc_create;
+		};
+	}, [], "Select Anchor Position"] call zen_common_fnc_selectposition;
+
+}, "a3\ui_f\data\igui\cfg\simpletasks\types\run_ca.paa"] call zen_custom_modules_fnc_register;
+
+//SETUP AMBUSH, ATTACH TO GROUP
+["[FOD] Zeus Additions", "Task Setup Ambush",
+{
+	params ["_modulePosASL", "_attachedObject"];
+
+	if (_attachedObject isKindOf "AllVehicles") then { _attachedObject = (crew _attachedObject) param [0, objNull]; };
+
+	if (isNull _attachedObject || { !(_attachedObject isKindOf "CAManBase") }) exitWith {
+		[objNull, "Attach this module to a unit to set up an ambush for that unit's group."] call BIS_fnc_showCuratorFeedbackMessage;
+	};
+
+	[_attachedObject, {
+		params ["_successful", "_attachedObject", "_position"];
+
+		if (_successful && { !isNull _attachedObject }) then {
+			private _group = group _attachedObject;
+			private _coverValues = [0, 1, 2, 3, 4, 5, 6];
+			private _coverLabels = ["All (Buildings, Walls, Vegetation)", "Buildings Only", "Walls / Fortifications Only", "Vegetation Only", "Buildings + Vegetation", "Buildings + Walls", "Walls + Vegetation"];
+
+			[
+				"Setup Ambush Options",
+				[
+					["COMBO", ["Cover Type", "What units should use as cover while in ambush."], [_coverValues, _coverLabels, 0]],
+					["CHECKBOX", ["Patrol", "Split a small element to patrol the area while the rest hold the ambush."], [false]],
+					["SLIDER:RADIUS", ["Radius (m)", "Area searched for ambush positions around the selected point."], [25, 300, 100, 0, _position, [255, 0, 255, 255]]]
+				],
+				{
+					params ["_values", "_arguments"];
+					_values params ["_coverType", "_patrol", "_radius"];
+					_arguments params ["_group", "_ambushPos"];
+
+					[_group, _ambushPos, _radius, [], false, _coverType, true, _patrol] spawn FOD_ZA_fnc_taskEntrench;
+
+					[format ["Setup Ambush: %1 is moving into ambush positions (radius %2m).", groupId _group, _radius]] call FOD_ZA_fnc_curatorFeedback;
+				},
+				{},
+				[_group, _position]
+			] call zen_dialog_fnc_create;
+		};
+	}, [], "Select Ambush Position"] call zen_common_fnc_selectposition;
+
+}, "a3\ui_f\data\gui\cfg\hints\tactical_view_ca.paa"] call zen_custom_modules_fnc_register;
+
+//MOBILIZE QRF, ATTACH TO GROUP
+["[FOD] Zeus Additions", "Task Mobilize QRF",
+{
+	params ["_modulePosASL", "_attachedObject"];
+
+	if (_attachedObject isKindOf "AllVehicles") then { _attachedObject = (crew _attachedObject) param [0, objNull]; };
+
+	if (isNull _attachedObject || { !(_attachedObject isKindOf "CAManBase") }) exitWith {
+		[objNull, "Attach this module to a unit to mobilize that unit's group."] call BIS_fnc_showCuratorFeedbackMessage;
+	};
+
+	[_attachedObject, {
+		params ["_successful", "_attachedObject", "_position"];
+
+		if (_successful && { !isNull _attachedObject }) then {
+			private _group = group _attachedObject;
+
+			[_group, _position, 30] spawn FOD_ZA_fnc_taskMobilizeQRF;
+
+			[format ["Mobilize QRF: %1 is mobilizing toward the selected point.", groupId _group]] call FOD_ZA_fnc_curatorFeedback;
+		};
+	}, [], "Select Mobilization Target"] call zen_common_fnc_selectposition;
+
+}, "a3\data_f_tacops\images\achtobeyondhope.jpg"] call zen_custom_modules_fnc_register;
+
+//SUPPORT VEHICLE, ATTACH TO GROUP
+["[FOD] Zeus Additions", "Task Support Vehicle",
+{
+	params ["_modulePosASL", "_attachedObject"];
+
+	if (!(_attachedObject isKindOf "AllVehicles")) exitWith {
+		[objNull, "Attach this module to a vehicle to send it in support of the nearest ally."] call BIS_fnc_showCuratorFeedbackMessage;
+	};
+
+	private _group = group _attachedObject;
+
+	if (_group getVariable ["FOD_SV_active", false]) exitWith {
+		[_group] call FOD_ZA_fnc_taskSupportVehicleToggle;
+	};
+
+	[_attachedObject, {
+		params ["_successful", "_attachedObject", "_position"];
+
+		if (_successful && { !isNull _attachedObject }) then {
+			private _group = group _attachedObject;
+
+			[_group, _position, 50] call FOD_ZA_fnc_taskSupportVehicleToggle;
+
+			[format ["Support Vehicle: %1 is moving to support the selected point.", groupId _group]] call FOD_ZA_fnc_curatorFeedback;
+		};
+	}, [], "Select Support Position"] call zen_common_fnc_selectposition;
+
+}, "a3\data_f_tacops\images\achtolifeline.jpg"] call zen_custom_modules_fnc_register;
+
+// "a3\ui_f\data\igui\cfg\simpletasks\types\run_ca.paa"
+// "a3\ui_f\data\gui\cfg\hints\basiclean_ca.paa"
+// "a3\ui_f\data\gui\cfg\hints\basicstances_ca.paa"
+// "a3\ui_f\data\gui\cfg\uigrids\grid_stance.paa"
+
+// "a3\ui_f\data\gui\cfg\hints\time_trials_ca.paa"
+// "a3\structures_f_bootcamp\vr\helpers\data\vr_symbol_commanding_movement_ca.paa"
+// "a3\missions_f_oldman\data\img\holdactions\holdaction_follow_start_ca.paa"
+// "a3\ui_f\data\gui\cfg\hints\callsupport_ca.paa" //comm center headshot with headset on
+
+// "a3\structures_f_exp_a\vr\helpers\data\vr_symbol_exp_a_stamina_ca.paa" //mg dude running circle around it

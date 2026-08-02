@@ -133,21 +133,34 @@ if (_faction isEqualTo "") then {
 private _center = getPosATL _logic;
 
 // --- Read the rest, with the same defaults as the dialog -------------
-private _radius         = _logic getVariable ["GEA_radius",         500];
-private _skill          = _logic getVariable ["GEA_skill",          0.5];
-private _patrolGroups   = _logic getVariable ["GEA_patrolGroups",   3];
-private _garrisonGroups = _logic getVariable ["GEA_garrisonGroups", 5];
-private _staticTurrets  = _logic getVariable ["GEA_staticTurrets",  0];
-private _vehiclePatrols = _logic getVariable ["GEA_vehiclePatrols", 1];
-private _vehPctCar      = _logic getVariable ["GEA_vehPctCar",      70];
-private _vehPctApc      = _logic getVariable ["GEA_vehPctApc",      20];
-private _vehPctTank     = _logic getVariable ["GEA_vehPctTank",     10];
-private _airPatrols     = _logic getVariable ["GEA_airPatrols",     0];
-private _airPctHeli     = _logic getVariable ["GEA_airPctHeli",     60];
-private _airPctJet      = _logic getVariable ["GEA_airPctJet",      20];
-private _airPctDrone    = _logic getVariable ["GEA_airPctDrone",    10];
-private _airPctPlane    = _logic getVariable ["GEA_airPctPlane",    10];
-private _showMarker     = _logic getVariable ["GEA_showMarker",     true];
+// Attribute values fall back to the CBA default (GEA_def_*) when unset,
+// then to the original hardcoded default. Faction/side are never CBA
+// settings — they stay attribute/dialog-only.
+private _radius         = _logic getVariable ["GEA_radius",         missionNamespace getVariable ["GEA_def_radius",         500]];
+private _skill          = _logic getVariable ["GEA_skill",          missionNamespace getVariable ["GEA_def_skill",          0.5]];
+private _patrolGroups   = _logic getVariable ["GEA_patrolGroups",   missionNamespace getVariable ["GEA_def_patrolGroups",   3]];
+private _garrisonGroups = _logic getVariable ["GEA_garrisonGroups", missionNamespace getVariable ["GEA_def_garrisonGroups", 5]];
+private _staticTurrets  = _logic getVariable ["GEA_staticTurrets",  missionNamespace getVariable ["GEA_def_staticTurrets",  0]];
+private _vehiclePatrols = _logic getVariable ["GEA_vehiclePatrols", missionNamespace getVariable ["GEA_def_vehiclePatrols", 1]];
+private _vehPctCar      = _logic getVariable ["GEA_vehPctCar",      missionNamespace getVariable ["GEA_def_vehPctCar",      70]];
+private _vehPctApc      = _logic getVariable ["GEA_vehPctApc",      missionNamespace getVariable ["GEA_def_vehPctApc",      20]];
+private _vehPctTank     = _logic getVariable ["GEA_vehPctTank",     missionNamespace getVariable ["GEA_def_vehPctTank",     10]];
+private _airPatrols     = _logic getVariable ["GEA_airPatrols",     missionNamespace getVariable ["GEA_def_airPatrols",     0]];
+private _airPctHeli     = _logic getVariable ["GEA_airPctHeli",     missionNamespace getVariable ["GEA_def_airPctHeli",     60]];
+private _airPctJet      = _logic getVariable ["GEA_airPctJet",      missionNamespace getVariable ["GEA_def_airPctJet",      20]];
+private _airPctDrone    = _logic getVariable ["GEA_airPctDrone",    missionNamespace getVariable ["GEA_def_airPctDrone",    10]];
+private _airPctPlane    = _logic getVariable ["GEA_airPctPlane",    missionNamespace getVariable ["GEA_def_airPctPlane",    10]];
+private _showMarker     = _logic getVariable ["GEA_showMarker",     missionNamespace getVariable ["GEA_def_showMarker",     true]];
+private _simplePathing  = _logic getVariable ["GEA_simplePathing",  missionNamespace getVariable ["GEA_def_simplePathing",  false]];
+private _civFaction     = _logic getVariable ["GEA_civFaction",     ""];
+private _civPatrol      = _logic getVariable ["GEA_civPatrol",      missionNamespace getVariable ["GEA_def_civPatrol",      0]];
+private _civGarrison    = _logic getVariable ["GEA_civGarrison",    missionNamespace getVariable ["GEA_def_civGarrison",    0]];
+private _civCars        = _logic getVariable ["GEA_civCars",        missionNamespace getVariable ["GEA_def_civCars",        0]];
+private _mineFields     = _logic getVariable ["GEA_mineFields",     missionNamespace getVariable ["GEA_def_mineFields",     0]];
+private _showMineMarkers = _logic getVariable ["GEA_showMineMarkers", missionNamespace getVariable ["GEA_def_showMineMarkers", false]];
+private _roadblocks     = _logic getVariable ["GEA_roadblocks",     missionNamespace getVariable ["GEA_def_roadblocks",     0]];
+private _heliRange      = _logic getVariable ["GEA_heliRange",      missionNamespace getVariable ["GEA_def_heliRange",      1000]];
+private _planeRange     = _logic getVariable ["GEA_planeRange",     missionNamespace getVariable ["GEA_def_planeRange",     2000]];
 
 // --- Assemble the SHARED positional _values array -------------------
 // Order MUST match fn_buildAOConfig (and the ZEN dialog rows).
@@ -167,7 +180,17 @@ private _values = [
     _airPctJet,         // 12
     _airPctDrone,       // 13
     _airPctPlane,       // 14
-    _showMarker         // 15
+    _showMarker,        // 15
+    _simplePathing,     // 16
+    _civFaction,        // 17
+    _civPatrol,         // 18
+    _civGarrison,       // 19
+    _civCars,           // 20
+    _mineFields,        // 21
+    _showMineMarkers,   // 22
+    _roadblocks,        // 23
+    _heliRange,         // 24
+    _planeRange         // 25
 ];
 
 private _aoCfg = [_center, _side, _values] call GEA_fnc_buildAOConfig;

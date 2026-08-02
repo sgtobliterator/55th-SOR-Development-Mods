@@ -1,4 +1,4 @@
-// FOD: Hit & Run waypoint script
+// Hit & Run waypoint script
 // Called by ZEN when the waypoint is reached by a group.
 // Group engages, breaks contact, retreats, and repeats indefinitely.
 params ["_group", "_position"];
