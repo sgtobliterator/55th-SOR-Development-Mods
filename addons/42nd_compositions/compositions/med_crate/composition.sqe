@@ -1,0 +1,47 @@
+version=54;
+center[]={4912.5762,5,2721.3899};
+class items
+{
+	items=1;
+	class Item0
+	{
+		dataType="Object";
+		side="Empty";
+		flags=4;
+		class Attributes
+		{
+		};
+		id=0;
+		type="ACE_medicalSupplyCrate_advanced";
+		class CustomAttributes
+		{
+			class Attribute0
+			{
+				property="ObjectCollision";
+				expression="[_this, 	(			[false,true] select (if 		(_value in [true,false]) 	then 	{parseNumber _value} else {_value # 0}		 ) ) 	] remoteExecCall ['setPhysicsCollisionFlag', 0, _this];";
+				class Value
+				{
+					class data
+					{
+						singleType="BOOL";
+						value=1;
+					};
+				};
+			};
+			class Attribute1
+			{
+				property="ammoBox";
+				expression="[_this,_value] call bis_fnc_initAmmoBox;";
+				class Value
+				{
+					class data
+					{
+						singleType="STRING";
+						value="[[[[],[]],[[""SmokeShellYellow"",""SmokeShellPurple"",""SmokeShellOrange""],[5,5,5]],[[""ACE_packingBandage"",""ACE_elasticBandage"",""ACE_tourniquet"",""ACE_splint"",""ACE_adenosine"",""ACE_epinephrine"",""ACE_plasmaIV_500"",""ACE_salineIV"",""ACE_salineIV_500"",""ACE_salineIV_250"",""ACE_bloodIV"",""ACE_bloodIV_500"",""ACE_bloodIV_250"",""ACE_quikclot"",""ACE_bodyBag"",""kat_larynx"",""kat_fluidWarmer"",""kat_handWarmer"",""kat_IV_16"",""kat_IO_FAST"",""kat_naloxone"",""kat_EACA"",""kat_TXA"",""kat_norepinephrine"",""kat_phenylephrine"",""kat_phenylephrineAuto"",""kat_nitroglycerin"",""kat_amiodarone"",""kat_lidocaine"",""kat_atropine"",""kat_ketamine"",""kat_fentanyl"",""kat_nalbuphine"",""kat_lorazepam"",""kat_flumazenil"",""kat_etomidate"",""kat_epinephrineIV"",""kat_Pulseoximeter"",""kat_nasal"",""kat_chestSeal"",""kat_aatKit"",""kat_BVM"",""ACE_WaterBottle"",""ACE_painkillers_Item"",""kat_gasmaskFilter""],[60,60,12,16,5,20,10,12,12,16,12,12,16,30,10,15,3,10,30,15,10,25,25,10,5,10,10,10,5,5,5,5,10,5,5,5,15,10,5,20,5,2,5,5,10]],[[],[]]],false]";
+					};
+				};
+			};
+			nAttributes=2;
+		};
+	};
+};

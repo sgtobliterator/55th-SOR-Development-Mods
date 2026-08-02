@@ -1,9 +1,9 @@
-name = "55th SOR Development Mod";
-picture = "\x\BFSQN_PrivateMod\addons\55th_Ui\Images\55th_SOR_Icon_1.paa";
-logo = "\x\BFSQN_PrivateMod\addons\55th_Ui\Images\55th_SOR_Icon_1.paa";
-logoOver = "\x\BFSQN_PrivateMod\addons\55th_Ui\Images\55th_SOR_Icon_1.paa";
-logoSmall = "\x\BFSQN_PrivateMod\addons\55th_Ui\Images\55th_SOR_Icon_1.paa";
-description = "55th SOR Development Mod";
-author = "55th SOR";
+name = "42nd SOC Development Mod";
+picture = "\x\55th_dev\addons\55th_arsenals\55th_SOR_Icon_1.paa";
+logo = "\x\55th_dev\addons\55th_arsenals\55th_SOR_Icon_1.paa";
+logoOver = "\x\55th_dev\addons\55th_arsenals\55th_SOR_Icon_1.paa";
+logoSmall = "\x\55th_dev\addons\55th_arsenals\55th_SOR_Icon_1.paa";
+description = "42nd SOC Development Mod";
+author = "42nd SOC";
 actionName = "Website";
 action = "https://github.com/sgtobliterator/55th-SOR-Development-Mods";

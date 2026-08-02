@@ -1,0 +1,8 @@
+version=54;
+name="General Supply Crate";
+author="sgtobliterator";
+category="42cdo_Eden_Subcategory_Crates";
+requiredAddons[]=
+{
+	"121_75th_supplies"
+};

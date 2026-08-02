@@ -1,0 +1,8 @@
+version=54;
+name="med adv crate";
+author="brax";
+category="42cdo_Eden_Subcategory_Crates";
+requiredAddons[]=
+{
+	"ace_medical_treatment"
+};

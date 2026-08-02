@@ -1,0 +1,61 @@
+version=54;
+center[]={7302.6812,5,3430.625};
+class items
+{
+	items=1;
+	class Item0
+	{
+		dataType="Layer";
+		name="General Supply Crate";
+		class Entities
+		{
+			items=1;
+			class Item0
+			{
+				dataType="Object";
+				class PositionInfo
+				{
+					position[]={-0.00048828125,-4.7683716e-07,0.00024414062};
+				};
+				side="Empty";
+				flags=4;
+				class Attributes
+				{
+				};
+				id=7;
+				type="121_75th_supply_1";
+				class CustomAttributes
+				{
+					class Attribute0
+					{
+						property="ObjectCollision";
+						expression="[_this, 	(			[false,true] select (if 		(_value in [true,false]) 	then 	{parseNumber _value} else {_value # 0}		 ) ) 	] remoteExecCall ['setPhysicsCollisionFlag', 0, _this];";
+						class Value
+						{
+							class data
+							{
+								singleType="BOOL";
+								value=1;
+							};
+						};
+					};
+					class Attribute1
+					{
+						property="ammoBox";
+						expression="[_this,_value] call bis_fnc_initAmmoBox;";
+						class Value
+						{
+							class data
+							{
+								singleType="STRING";
+								value="[[[[""rhs_weap_M136""],[5]],[[""HandGrenade"",""SmokeShell"",""SmokeShellRed"",""SmokeShellPurple"",""SmokeShellBlue"",""rhs_mag_maaws_HEAT"",""MiniGrenade"",""MS_Strobe_Mag_2"",""rhs_mag_mk3a2"",""rhs_mag_m7a3_cs"",""ACE_Chemlight_HiRed"",""ACE_Chemlight_HiBlue"",""ACE_Chemlight_HiGreen"",""ACE_Chemlight_IR"",""SatchelCharge_Remote_Mag"",""ClaymoreDirectionalMine_Remote_Mag"",""rhsusf_m112x4_mag"",""rhsusf_100Rnd_556x45_M995_soft_pouch"",""MCC_PMAG_556_556_30_M995"",""rhsusf_100Rnd_762x51_m80a1epr"",""KAR_100Rnd_Fury_RT_blk"",""1Rnd_HE_Grenade_shell"",""1Rnd_Smoke_Grenade_shell"",""1Rnd_SmokeRed_Grenade_shell"",""1Rnd_SmokeGreen_Grenade_shell"",""1Rnd_SmokePurple_Grenade_shell"",""1Rnd_SmokeBlue_Grenade_shell"",""ACE_HuntIR_M203"",""UGL_FlareWhite_Illumination_F"",""rhs_mag_M433_HEDP"",""ACE_40mm_Pike"",""MCC_ICM_6ARC_20RD_ADVAP"",""MCC_PMAG_68SPC_25_85TSX"",""MCC_PMAG_65x43_25_120CMOT""],[20,15,6,5,6,10,40,5,20,10,15,15,15,15,10,5,5,15,50,15,10,30,20,5,5,5,5,5,10,15,10,40,20,20]],[[""ACE_packingBandage"",""ACE_elasticBandage"",""kat_chestSeal"",""kat_IV_16"",""ACE_EarPlugs"",""ACE_bloodIV"",""ACE_bloodIV_500"",""ACE_quikclot"",""kat_guedel"",""kat_handWarmer"",""kat_AFAK""],[50,50,20,20,15,10,10,50,15,10,5]],[[],[]]],false]";
+							};
+						};
+					};
+					nAttributes=2;
+				};
+			};
+		};
+		id=8;
+	};
+};
